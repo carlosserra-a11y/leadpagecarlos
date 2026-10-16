@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Página cortada · Carlos Serra</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#05060a">
+<link rel="icon" href="/leadpagecarlos/assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@900&family=IBM+Plex+Mono:wght@500&family=Yuji+Syuku&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap">
+<style>
+/* Página 404 independente: funciona em qualquer endereço quebrado do site */
+:root{--void:#05060a;--night:#0b0e1c;--line:#232a47;--snow:#eef2fb;--frost:#a3b4d8;--blood:#e3132f;--rim:#ff3b5c;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--void);color:var(--snow);font:400 1.05rem/1.6 "Zen Kaku Gothic New",system-ui,sans-serif;display:grid;place-items:center;overflow:hidden;
+  padding:24px max(16px,env(safe-area-inset-right)) 24px max(16px,env(safe-area-inset-left))}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(60% 45% at 75% 85%,rgba(227,19,47,.4),transparent 70%),linear-gradient(180deg,var(--void),var(--night) 55%,#3a0f24 82%,var(--void))}
+.k{position:fixed;right:-.08em;bottom:-.2em;font:400 clamp(16rem,48vw,38rem)/1 "Yuji Syuku",serif;color:var(--blood);opacity:.16;pointer-events:none}
+.half{position:relative;display:grid;gap:1.2rem;max-width:640px;width:100%}
+.seal{display:inline-grid;place-items:center;width:3.4rem;height:3.4rem;background:var(--blood);border-radius:4px;font:400 2.2rem/1 "Yuji Syuku",serif;box-shadow:0 0 30px rgba(227,19,47,.5)}
+.mono{font:500 .78rem "IBM Plex Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--frost);margin:0}
+h1{margin:0;font:900 clamp(3.4rem,13vw,7.5rem)/.86 "Big Shoulders Display","Arial Narrow",sans-serif;text-transform:uppercase;position:relative}
+h1 span{display:block;color:transparent;-webkit-text-stroke:2px var(--snow)}
+h1::after{content:"";position:absolute;left:-4%;right:-4%;top:48%;height:8px;background:var(--blood);transform:rotate(-7deg);box-shadow:0 0 26px var(--blood);animation:cut .7s cubic-bezier(.7,0,.2,1) both .2s;transform-origin:left}
+@keyframes cut{from{transform:rotate(-7deg) scaleX(0)}to{transform:rotate(-7deg) scaleX(1)}}
+p{margin:0;color:var(--frost);max-width:46ch}
+.acts{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:.4rem}
+a.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.95rem 1.3rem;font:700 .95rem/1 "Zen Kaku Gothic New",sans-serif;text-decoration:none;color:var(--snow);border:1px solid var(--snow)}
+a.btn.primary{background:var(--blood);border-color:var(--blood)}
+a.btn:hover{border-color:var(--rim);color:var(--snow);background:rgba(227,19,47,.25)}
+a.btn.primary:hover{background:var(--rim)}
+:focus-visible{outline:2px solid var(--rim);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){h1::after{animation:none}}
+</style>
+</head>
+<body>
+<span class="k" aria-hidden="true">斬</span>
+<main class="half">
+  <span class="seal" aria-hidden="true">斬</span>
+  <p class="mono">Erro 404 · ページが見つかりません</p>
+  <h1>Esta página <span>foi cortada.</span></h1>
+  <p>O endereço que você abriu não existe mais ou foi digitado errado. O portfólio inteiro continua de pé.</p>
+  <div class="acts">
+    <a class="btn primary" id="home" href="/leadpagecarlos/">Voltar ao portfólio</a>
+    <a class="btn" href="https://github.com/carlosserra-a11y">Ver o GitHub</a>
+  </div>
+</main>
+<script>
+/* Fora do GitHub Pages (ex.: aberto direto do computador), o link volta para o index.html da mesma pasta */
+if (!/github\.io$/.test(location.hostname)) document.getElementById("home").href = "index.html";
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "portfolio-ferramentas",
+  "private": true,
+  "description": "Ferramentas do portfólio: converte as imagens de assets/bleach/originais em AVIF, WebP e JPG.",
+  "type": "module",
+  "scripts": {
+    "imagens": "node imagens.mjs"
+  },
+  "dependencies": {
+    "sharp": "0.34.4"
+  }
+}
