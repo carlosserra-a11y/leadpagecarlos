@@ -1,5 +1,5 @@
-// Gera o pôster da katana (a imagem que aparece antes do 3D, ou no lugar dele em aparelhos sem GPU).
-// Usa a mesma pose do site (const POSE em js/app.js), com fundo transparente, em 900 e 1400 px (AVIF e WebP).
+// Gera o pôster da vitrine 3D (a imagem do topo no celular e em aparelhos sem GPU, e a que aparece antes do 3D carregar).
+// Desenha o notebook e o celular parados, com fundo transparente, em 900 e 1400 px (AVIF e WebP).
 // Uso:  node ferramentas/poster.mjs   (precisa de: npm install; npx playwright install chromium)
 //       PLAYWRIGHT=/caminho/playwright CHROME=/caminho/chromium node ferramentas/poster.mjs   (para usar um já instalado)
 import { readFileSync, mkdirSync } from "node:fs";
@@ -13,8 +13,7 @@ const require = createRequire(import.meta.url);
 const sharp = require("sharp");
 const { chromium } = require(process.env.PLAYWRIGHT || "playwright");
 
-const pose = readFileSync(join(RAIZ, "js/app.js"), "utf8").match(/const POSE = (\{[^}]*\});/)[1];
-const TIPOS = { ".html": "text/html", ".js": "application/javascript" };
+const TIPOS = { ".html": "text/html", ".js": "application/javascript", ".webp": "image/webp" };
 const srv = createServer((req, res) => {
   const f = join(RAIZ, decodeURIComponent(new URL(req.url, "http://x").pathname));
   let corpo;
@@ -22,20 +21,18 @@ const srv = createServer((req, res) => {
   res.writeHead(200, { "content-type": TIPOS[extname(f)] || "application/octet-stream" }); res.end(corpo);
 });
 await new Promise(ok => srv.listen(0, "127.0.0.1", ok));
-const porta = srv.address().port;
 
 const browser = await chromium.launch({ executablePath: process.env.CHROME || undefined, args: ["--use-gl=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
-const page = await browser.newPage({ viewport: { width: 1400, height: 1400 } });
-await page.goto(`http://127.0.0.1:${porta}/ferramentas/poster.html?pose=${encodeURIComponent(JSON.stringify(Function(`return ${pose}`)()))}`);
-await page.waitForFunction(() => document.title === "pronto");
-await page.waitForTimeout(1200);
+const page = await browser.newPage({ viewport: { width: 1400, height: 1000 } });
+await page.goto(`http://127.0.0.1:${srv.address().port}/ferramentas/poster.html`);
+await page.waitForFunction(() => document.title === "pronto", null, { timeout: 60000 });
 const png = await page.screenshot({ omitBackground: true });
 await browser.close(); srv.close();
 
-mkdirSync(join(RAIZ, "assets/katana"), { recursive: true });
+mkdirSync(join(RAIZ, "assets/vitrine"), { recursive: true });
 for (const w of [900, 1400]) {
   const img = sharp(png).resize(w);
-  await img.clone().webp({ quality: 82, alphaQuality: 90, effort: 6 }).toFile(join(RAIZ, `assets/katana/katana-${w}.webp`));
-  await img.clone().avif({ quality: 60, effort: 6 }).toFile(join(RAIZ, `assets/katana/katana-${w}.avif`));
+  await img.clone().webp({ quality: 80, alphaQuality: 90, effort: 6 }).toFile(join(RAIZ, `assets/vitrine/vitrine-${w}.webp`));
+  await img.clone().avif({ quality: 55, effort: 6 }).toFile(join(RAIZ, `assets/vitrine/vitrine-${w}.avif`));
 }
-console.log(`Pôster gerado em assets/katana/ com a pose ${pose}`);
+console.log("Pôster gerado em assets/vitrine/");

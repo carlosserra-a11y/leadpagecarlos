@@ -1,10 +1,10 @@
 {
   "name": "leadpagecarlos-ferramentas",
   "private": true,
-  "description": "Ferramentas do portfólio: monta a katana 3D (three.js + esbuild), gera o pôster dela e atualiza fontes e hashes da CSP.",
+  "description": "Ferramentas do portfólio: monta a vitrine 3D (three.js + esbuild), gera o pôster dela e atualiza fontes e hashes da CSP.",
   "type": "module",
   "scripts": {
-    "katana": "node build-katana.mjs",
+    "vitrine": "node build-vitrine.mjs",
     "poster": "node poster.mjs",
     "cabecalho": "node cabecalho.mjs"
   },

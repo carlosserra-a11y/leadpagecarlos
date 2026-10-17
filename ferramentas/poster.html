@@ -2,19 +2,21 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<title>Pôster da katana</title>
+<title>Pôster da vitrine</title>
 <meta name="robots" content="noindex">
 <style>html,body{margin:0;background:transparent}canvas{display:block;width:100vw;height:100vh}</style>
 </head>
 <body>
-<!-- Usado por ferramentas/poster.mjs: desenha a katana parada, com fundo transparente, para virar imagem -->
-<canvas id="k"></canvas>
-<script src="../lib/katana3d.min.js"></script>
+<!-- Usado por ferramentas/poster.mjs: desenha a vitrine parada, com fundo transparente, para virar imagem -->
+<canvas id="v"></canvas>
+<script src="../lib/vitrine3d.min.js"></script>
 <script>
-  var q = new URLSearchParams(location.search);
-  var k = Katana3D.mountKatana(document.getElementById("k"), { still: true, poster: true, pose: JSON.parse(q.get("pose") || "{}") });
-  if (q.get("bankai")) k.bankai(true);
-  document.title = "pronto";
+  var q = new URLSearchParams(location.search), p = "../assets/projetos/";
+  Vitrine3D.mountVitrine(document.getElementById("v"), {
+    still: true, poster: true, zoom: +(q.get("zoom") || 1),
+    screens: [{ desk: p + "figarus-longa.webp", mob: p + "figarus-mob.webp" }],
+    onReady: function () { setTimeout(function () { document.title = "pronto"; }, 300); }
+  });
 </script>
 </body>
 </html>

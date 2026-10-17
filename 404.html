@@ -7,30 +7,30 @@
 <meta name="robots" content="noindex">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-zhR4X1ECKHRucj1yyYidRZbz1G0bl2W6bvsMejwy5N8='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="theme-color" content="#0b0b0c">
+<meta name="theme-color" content="#0a0c10">
 <link rel="icon" href="/leadpagecarlos/assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..800&amp;family=JetBrains+Mono:wght@500&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&amp;family=Geist+Mono:wght@500&amp;display=swap">
 <style>
 /* Página 404 independente: funciona em qualquer endereço quebrado do site */
-:root{--bg:#0b0b0c;--line:#26262a;--txt:#f2f0eb;--muted:#a19f9a;--accent:#d7263d;--accent-txt:#ff5a6e;color-scheme:dark}
+:root{--bg:#0a0c10;--line:#1c212b;--txt:#e8ecf2;--muted:#98a2b3;--accent:#2f5bea;--accent-txt:#8fb0ff;color-scheme:dark}
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--txt);font:400 1.05rem/1.6 "Archivo",system-ui,sans-serif;display:grid;place-items:center;overflow:hidden;
+body{margin:0;background:var(--bg);color:var(--txt);font:400 1.05rem/1.6 "Geist",system-ui,sans-serif;display:grid;place-items:center;overflow:hidden;
   padding:24px max(16px,env(safe-area-inset-right)) 24px max(16px,env(safe-area-inset-left))}
 body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;opacity:.35;-webkit-mask-image:radial-gradient(70% 60% at 50% 50%,#000,transparent);mask-image:radial-gradient(70% 60% at 50% 50%,#000,transparent)}
 .wrap{position:relative;display:grid;gap:1.1rem;max-width:620px;width:100%}
-.mono{font:500 .78rem "JetBrains Mono",ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-txt);margin:0}
-h1{margin:0;font:800 clamp(2.6rem,9vw,5rem)/.95 "Archivo","Arial Narrow",sans-serif;font-stretch:85%;letter-spacing:-.02em}
+.mono{font:500 .78rem "Geist Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-txt);margin:0}
+h1{margin:0;font:600 clamp(2.6rem,9vw,5rem)/.95 "Geist",sans-serif;letter-spacing:-.045em}
 .cut{display:block;height:3px;width:min(260px,60%);background:var(--accent);transform-origin:left;animation:cut .6s cubic-bezier(.7,0,.2,1) both .15s}
 @keyframes cut{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 p{margin:0;color:var(--muted);max-width:46ch}
 .acts{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:.4rem}
-a.btn{display:inline-flex;align-items:center;gap:.5rem;min-height:46px;padding:0 1.2rem;border-radius:999px;font:600 .95rem/1 "Archivo",sans-serif;text-decoration:none;color:var(--txt);border:1px solid #3a3a40;transition:background .2s,border-color .2s}
+a.btn{display:inline-flex;align-items:center;gap:.5rem;min-height:46px;padding:0 1.2rem;border-radius:999px;font:500 .95rem/1 "Geist",sans-serif;text-decoration:none;color:var(--txt);border:1px solid #2a303c;transition:background .2s,border-color .2s}
 a.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
 a.btn:hover{border-color:var(--txt)}
-a.btn.primary:hover{background:#b81f33;border-color:#b81f33}
+a.btn.primary:hover{background:#3d68f2;border-color:#3d68f2}
 :focus-visible{outline:2px solid var(--accent-txt);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.cut{animation:none}}
 </style>

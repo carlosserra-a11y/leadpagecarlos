@@ -1,5 +1,5 @@
 /* =========================================================================
-   PORTFÓLIO CARLOS SERRA · versão 6.0
+   PORTFÓLIO CARLOS SERRA · versão 7.0
    Script clássico (sem módulos): abre com dois cliques no index.html.
    Tudo começa visível; animação e 3D entram depois da primeira pintura.
    ========================================================================= */
@@ -70,9 +70,10 @@ function applyStatic() {
 }
 function setLang(l) {
   lang = l; store.set("lang", l);
-  applyStatic(); renderCases(); renderOthers(); renderMore(); wireContact();
+  applyStatic(); renderProjs(); renderOthers(); renderMore(); wireContact();
   if (dlg.open) openCase(current, true);
-  if (window.ScrollTrigger) { animCases(); ScrollTrigger.refresh(); }
+  if (window.ScrollTrigger) { animProjs(); ScrollTrigger.refresh(); }
+  measureProjs();
 }
 $("#langBtn").addEventListener("click", () => setLang(lang === "en" ? "pt" : "en"));
 
@@ -148,33 +149,33 @@ function evoHtml(c) {
         <span class="v">${e.v}${e.repo === c.repo ? `<em>${u.now}</em>` : ""}</span>
         <span class="d">${esc(lang === "en" ? e.de : e.d)}</span></a></li>`).join("")}</ol></div>`;
 }
-function renderCases() {
+function renderProjs() {
   const u = U();
-  $("#cases").innerHTML = FEATURED.map((i, n) => {
+  $("#projs").innerHTML = FEATURED.map((i, n) => {
     const c = cs(CASES[i]), sh = `assets/projetos/${c.shot}`;
     return `
-    <article class="case" id="caso-${c.slug}-row" data-i="${i}">
-      <div class="case-card">
-        <div class="case-info">
-          <p class="case-idx"><b>${String(n + 1).padStart(2, "0")}</b>${esc(c.client)}</p>
+    <article class="proj" id="caso-${c.slug}-row" data-i="${i}" data-n="${n}">
+      <div class="wrap proj-in">
+        <div class="proj-info">
+          <p class="proj-idx"><b>${String(n + 1).padStart(2, "0")}</b>${esc(c.client)}</p>
           <h3>${esc(c.name)}</h3>
-          <p class="case-pitch">${esc(c.pitch)}</p>
-          <ul class="case-did">${c.did.slice(0, 3).map(x => `<li>${esc(x)}</li>`).join("")}</ul>
-          <p class="case-proof"><span>${u.check}</span>${esc(c.proof)}</p>
+          <p class="proj-pitch">${esc(c.pitch)}</p>
+          <ul class="proj-did">${c.did.slice(0, 3).map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+          <p class="proj-proof"><span>${u.check}</span>${esc(c.proof)}</p>
           <div class="tags">${c.stack.map(s => `<span class="tag">${esc(s)}</span>`).join("")}</div>
           <div class="case-acts">
             <button class="btn btn-line btn-sm" type="button" data-case="${i}">${u.details}${ic("i-arrow")}</button>
             ${ext(PAGES(c.repo), u.live, "tlink", u.liveOf(c.name))}
             ${ext(REPO(c.repo), u.code, "tlink", u.codeOf(c.name))}
           </div>
+          ${evoHtml(c)}
         </div>
-        <div class="case-media">
+        <div class="proj-media">
           <div class="browser">
             <div class="browser-bar"><i></i><i></i><i></i><span>${CONFIG.github}.github.io/${esc(c.repo)}</span></div>
             <div class="browser-view"><img class="long" src="${sh}-longa.webp" width="960" height="1700" loading="lazy" decoding="async" alt="${esc(`${u.shotAlt} ${c.name}`)}"></div>
           </div>
           <div class="phone"><img src="${sh}-mob.webp" width="390" height="844" loading="lazy" decoding="async" alt=""></div>
-          ${evoHtml(c)}
         </div>
       </div>
     </article>`;
@@ -189,7 +190,7 @@ function renderOthers() {
     return `<article class="other">
       <a class="other-shot" href="${PAGES(c.repo)}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true" data-cursor>
         <img src="${sh}-1-640.webp" srcset="${sh}-1-640.webp 640w, ${sh}-1-1280.webp 1280w" sizes="(max-width: 760px) 92vw, 600px" width="1280" height="800" loading="lazy" decoding="async" alt=""></a>
-      <p class="case-idx">${esc(c.client)}</p>
+      <p class="proj-idx">${esc(c.client)}</p>
       <h3>${esc(c.name)}</h3>
       <p>${esc(c.pitch)}</p>
       <div class="tags">${c.stack.map(s => `<span class="tag">${esc(s)}</span>`).join("")}</div>
@@ -322,11 +323,18 @@ if (CONFIG.buscarRepos && ONLINE) {               // repositórios novos (cache 
 })();
 
 /* ---------- cabeçalho, seção ativa, barra do celular, progresso ---------- */
-const top = $("#top");
-let lastY = scrollY, maxS = 1, heroH = 1, heroPinned = false;
-const measure = () => { maxS = Math.max(1, document.documentElement.scrollHeight - innerHeight); heroH = $(".hero").offsetHeight || 1; };
-measure(); addEventListener("resize", measure);
-if (window.ResizeObserver) new ResizeObserver(measure).observe(document.body);
+const top = $("#top"), hero = $(".hero"), work = $("#projetos");
+let lastY = scrollY, maxS = 1, heroH = 1, workEnd = 1, rows = [];
+const measure = () => {
+  maxS = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+  heroH = hero.offsetHeight || 1;
+  workEnd = work.offsetTop + work.offsetHeight;
+};
+function measureProjs() {
+  rows = $$(".proj").map(el => ({ i: +el.dataset.n, top: el.getBoundingClientRect().top + scrollY, h: el.offsetHeight || 1 }));
+}
+measure(); addEventListener("resize", () => { measure(); measureProjs(); });
+if (window.ResizeObserver) new ResizeObserver(() => { measure(); measureProjs(); }).observe(document.body);
 const bar = $("#progress");
 function onScroll() {
   const y = scrollY;
@@ -334,32 +342,30 @@ function onScroll() {
   if (Math.abs(y - lastY) > 4) top.classList.toggle("hide", y > lastY && y > 400 && !dlg.open);
   lastY = y;
   bar.style.transform = `scaleX(${Math.min(1, y / maxS)})`;
-  if (!heroPinned) katana?.scroll(Math.min(1, y / heroH));
+  syncVitrine();
 }
 addEventListener("scroll", onScroll, { passive: true });
 top.addEventListener("focusin", () => top.classList.remove("hide"));
 (function spy() {
-  const links = $$(".nav a"), byId = { projetos: "#projetos", outros: "#projetos", sobre: "#sobre", contato: "#contato" };
+  const links = $$(".nav a"), byId = { projetos: "#projetos", outros: "#projetos", stack: "#stack", sobre: "#sobre", contato: "#contato" };
   const io = new IntersectionObserver(es => es.forEach(e => {
     if (!e.isIntersecting) return;
     links.forEach(a => (a.getAttribute("href") === byId[e.target.id] ? a.setAttribute("aria-current", "true") : a.removeAttribute("aria-current")));
   }), { rootMargin: "-45% 0px -50% 0px" });
-  ["inicio", "projetos", "outros", "sobre", "contato"].forEach(id => { const s = document.getElementById(id); s && io.observe(s); });
+  ["inicio", "projetos", "outros", "stack", "sobre", "contato"].forEach(id => { const s = document.getElementById(id); s && io.observe(s); });
 })();
 (function dock() {
   const d = $("#dock"); let after = false, atContact = false;
   const sync = () => d.classList.toggle("on", after && !atContact);
-  new IntersectionObserver(([e]) => { after = !e.isIntersecting; sync(); }, { rootMargin: "0px 0px -40% 0px" }).observe($(".hero"));
+  new IntersectionObserver(([e]) => { after = !e.isIntersecting; sync(); }, { rootMargin: "0px 0px -40% 0px" }).observe(hero);
   new IntersectionObserver(([e]) => { atContact = e.isIntersecting; sync(); }, { threshold: .1 }).observe($("#contato"));
 })();
 
-/* ---------- zanpakutō 3D (three.js empacotado em lib/katana3d.min.js) ---------- */
-let katana = null;
-const stage = $("#katanaStage");
-// a mesma pose do pôster (ferramentas/poster.mjs): o 3D assume o lugar da imagem sem pular
-const POSE = { rz: -0.86, ry: -0.3, rx: 0.14, x: 0.09, y: -1.0, zoom: 0.81 };
-/* só com GPU de verdade: em renderização por software (SwiftShader, llvmpipe) o 3D trava a página,
-   então fica o pôster. ?3d=1 na URL força o 3D para testes */
+/* ---------- vitrine 3D: notebook e celular mostrando os projetos (three.js em lib/vitrine3d.min.js) ----------
+   Só no computador, com GPU de verdade e o site servido por http(s) (as capturas viram textura).
+   Sem isso, o topo mostra o pôster e cada projeto mostra a moldura do navegador em HTML. */
+let vitrine = null;
+const desktop = matchMedia("(min-width: 1024px)");
 function hasGPU() {
   try {
     const c = document.createElement("canvas"), gl = window.WebGLRenderingContext && (c.getContext("webgl2") || c.getContext("webgl"));
@@ -372,48 +378,61 @@ function hasGPU() {
   } catch (e) { return false; }
 }
 function loadScript(src) { return new Promise((ok, fail) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = fail; document.head.appendChild(s); }); }
-if (CONFIG.katana3d && !saveData && hasGPU()) {
-  const start = () => loadScript("lib/katana3d.min.js").then(() => {
-    katana = window.Katana3D.mountKatana($("#katana3d"), { still: reduce, pose: POSE });
-    requestAnimationFrame(() => stage.classList.add("ready"));
-    katana.scroll(heroPinned ? 0 : Math.min(1, scrollY / heroH));
-    if (html.classList.contains("bankai")) katana.bankai(true);
-  }).catch(() => { /* sem 3D: fica o pôster */ });
+function syncVitrine() {
+  if (!vitrine) return;
+  const y = scrollY, mid = y + innerHeight / 2;
+  const on = desktop.matches && mid < workEnd - innerHeight * 0.15;
+  html.classList.toggle("v3d-on", on);
+  vitrine.visible(on);
+  if (!on) return;
+  vitrine.mode(y / (heroH * 0.8));
+  // projeto ativo: o que estiver no meio da tela; a página rola na tela conforme você atravessa o projeto
+  let r = rows[0];
+  for (const row of rows) if (mid >= row.top) r = row;
+  if (!r) return;
+  vitrine.project(r.i);
+  vitrine.scroll((mid - r.top) / r.h);
+}
+if (CONFIG.vitrine3d && ONLINE && !saveData && !reduce && desktop.matches && hasGPU()) {
+  const start = () => loadScript("lib/vitrine3d.min.js").then(() => {
+    vitrine = window.Vitrine3D.mountVitrine($("#vitrine"), {
+      accent: "#4f7cff", zoom: 0.84,
+      screens: FEATURED.map(i => ({ desk: `assets/projetos/${CASES[i].shot}-longa.webp`, mob: `assets/projetos/${CASES[i].shot}-mob.webp` })),
+      onReady: () => { html.classList.add("v3d", "v3d-ready"); measure(); measureProjs(); syncVitrine(); window.ScrollTrigger?.refresh(); }
+    });
+  }).catch(() => { /* sem 3D: fica o pôster e as molduras em HTML */ });
   addEventListener("load", () => idle(start), { once: true });
+  desktop.addEventListener("change", () => syncVitrine());
 }
-if (finePointer) $(".hero").addEventListener("pointermove", e => {
-  katana?.pointer(e.clientX / innerWidth * 2 - 1, e.clientY / innerHeight * 2 - 1);
-}, { passive: true });
 
-/* ---------- modo Bankai (botão no rodapé ou tecla B) ---------- */
-const bankaiBtn = $("#bankai");
-function toggleBankai() {
-  const on = bankaiBtn.getAttribute("aria-pressed") !== "true";
-  bankaiBtn.setAttribute("aria-pressed", String(on));
-  html.classList.toggle("bankai", on);
-  katana?.bankai(on);
-  announce(on ? U().bankaiOn : U().bankaiOff);
-}
-bankaiBtn.addEventListener("click", toggleBankai);
-addEventListener("keydown", e => {
-  if (e.ctrlKey || e.metaKey || e.altKey || dlg.open) return;
-  if (/^(input|textarea|select)$/i.test(e.target.tagName) || e.target.isContentEditable) return;
-  if (e.key.toLowerCase() === "b") toggleBankai();
-});
-
-/* ---------- etiqueta "Abrir site" que segue o cursor e botão com atração ---------- */
+/* ---------- interações com o mouse: luz do topo, cartões da stack, etiqueta "Abrir site", botões com atração ---------- */
 if (finePointer && !reduce) {
-  const tag = $("#cursorTag"); let tx = -100, ty = -100, x = -100, y = -100, raf = 0;
-  const loop = () => { x += (tx - x) * .22; y += (ty - y) * .22; tag.style.transform = `translate3d(${x + 14}px,${y + 14}px,0)`; raf = Math.abs(tx - x) + Math.abs(ty - y) > .3 ? requestAnimationFrame(loop) : 0; };
+  let raf = 0, ev = null;
+  document.addEventListener("pointermove", e => {
+    ev = e;
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      const nx = ev.clientX / innerWidth, ny = ev.clientY / innerHeight;
+      vitrine?.pointer(nx * 2 - 1, ny * 2 - 1);
+      if (scrollY < heroH) { hero.style.setProperty("--mx", `${(nx * 100).toFixed(1)}%`); hero.style.setProperty("--my", `${(ev.clientY + scrollY) / heroH * 100}%`); }
+      grid.pointer(ev.clientX, ev.clientY);
+    });
+  }, { passive: true });
+  $$(".skill").forEach(card => card.addEventListener("pointermove", e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty("--x", `${e.clientX - r.left}px`); card.style.setProperty("--y", `${e.clientY - r.top}px`);
+  }));
+  const tag = $("#cursorTag"); let tx = -100, ty = -100, x = -100, y = -100, traf = 0;
+  const loop = () => { x += (tx - x) * .22; y += (ty - y) * .22; tag.style.transform = `translate3d(${x + 14}px,${y + 14}px,0)`; traf = Math.abs(tx - x) + Math.abs(ty - y) > .3 ? requestAnimationFrame(loop) : 0; };
   document.addEventListener("pointermove", e => {
     const over = e.target.closest?.("[data-cursor]");
     tag.classList.toggle("on", !!over);
     if (!over) return;
     tx = e.clientX; ty = e.clientY;
     if (!tag.dataset.seen) { x = tx; y = ty; tag.dataset.seen = "1"; }
-    if (!raf) raf = requestAnimationFrame(loop);
+    if (!traf) traf = requestAnimationFrame(loop);
   }, { passive: true });
-  document.addEventListener("pointerleave", () => tag.classList.remove("on"));
   $$(".magnet").forEach(b => {
     b.addEventListener("pointermove", e => {
       const r = b.getBoundingClientRect(), dx = (e.clientX - r.left - r.width / 2) / r.width, dy = (e.clientY - r.top - r.height / 2) / r.height;
@@ -423,12 +442,50 @@ if (finePointer && !reduce) {
   });
 }
 
+/* ---------- fundo vivo: grade de pontos com parallax na rolagem, uma onda passando e luz perto do mouse ---------- */
+const grid = (function () {
+  const c = $("#bgGrid"), g = c.getContext("2d");
+  if (!g) return { pointer() {} };
+  const GAP = finePointer ? 30 : 36;
+  let w = 0, h = 0, dpr = 1, mx = -999, my = -999, raf = 0, lastT = 0, running = false;
+  const size = () => { dpr = Math.min(devicePixelRatio || 1, 1.5); w = innerWidth; h = innerHeight; c.width = w * dpr; c.height = h * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0); };
+  function draw(t) {
+    g.clearRect(0, 0, w, h);
+    const off = (scrollY * 0.3) % GAP, time = reduce ? 0 : t / 1000;
+    for (let y = -GAP; y < h + GAP; y += GAP) {
+      const yy = y - off;
+      for (let x = GAP / 2; x < w; x += GAP) {
+        const dx = x - mx, dy = yy - my, d = Math.sqrt(dx * dx + dy * dy), near = Math.max(0, 1 - d / 190);
+        const wave = 0.5 + 0.5 * Math.sin(x * 0.011 + yy * 0.007 - time * 0.9);
+        const px = x + (d ? dx / d : 0) * near * 7, py = yy + (d ? dy / d : 0) * near * 7, s = 1.2 + near * 1.6;
+        g.fillStyle = near > 0.02 ? `rgba(143,176,255,${0.12 + near * 0.6})` : `rgba(232,236,242,${0.05 + wave * 0.07})`;
+        g.fillRect(px - s / 2, py - s / 2, s, s);
+      }
+    }
+  }
+  function frame(t) {
+    raf = 0;
+    if (t - lastT > 33) { draw(t); lastT = t; }        // ~30 quadros por segundo bastam para o fundo
+    if (running && !document.hidden) raf = requestAnimationFrame(frame);
+  }
+  const start = () => { if (!running) { running = true; if (!raf) raf = requestAnimationFrame(frame); } };
+  size(); draw(0);
+  addEventListener("resize", () => { size(); draw(performance.now()); });
+  if (reduce) addEventListener("scroll", () => draw(0), { passive: true });
+  else {
+    addEventListener("load", () => idle(start), { once: true });
+    document.addEventListener("visibilitychange", () => { if (!document.hidden && running && !raf) raf = requestAnimationFrame(frame); });
+  }
+  return { pointer(x, y) { mx = x; my = y; } };
+})();
+
 /* ---------- montagem inicial ---------- */
 applyStatic();
 wireContact();
-renderCases();
+renderProjs();
 renderOthers();
 renderMore();
+measureProjs();
 caseFromHash();
 
 /* =========================================================================
@@ -448,28 +505,24 @@ function splitWords(el) {
   el.innerHTML = el.textContent.trim().split(/\s+/).map(w => `<span class="w"><span>${esc(w)}</span></span>`).join(" ");
 }
 
-// projetos em destaque: refeito quando o idioma troca (os cartões são redesenhados)
-let caseCtx = null;
-function animCases() {
-  caseCtx?.revert();
-  caseCtx = gsap.context(() => {
-    const stacked = matchMedia("(min-width: 1024px) and (min-height: 760px)").matches;
-    const rows = $$(".case");
-    rows.forEach((row, n) => {
-      const view = $(".browser-view", row), img = $(".long", row);
-      // a captura da página inteira rola dentro da moldura do navegador
-      gsap.to(img, { y: () => -Math.max(0, img.offsetHeight - view.clientHeight), ease: "none",
-        scrollTrigger: { trigger: row, start: stacked ? "top 60%" : "top 85%", end: stacked ? "bottom top" : "bottom 15%", scrub: .4, invalidateOnRefresh: true } });
-      gsap.fromTo($(".phone", row), { yPercent: 14 }, { yPercent: -14, ease: "none", scrollTrigger: { trigger: row, start: "top bottom", end: "bottom top", scrub: true } });
+// projetos: refeito quando o idioma troca (os blocos são redesenhados)
+let projCtx = null;
+function animProjs() {
+  projCtx?.revert();
+  projCtx = gsap.context(() => {
+    $$(".proj").forEach(row => {
+      gsap.from($$(".proj-info > *", row), { y: 26, opacity: 0, duration: .8, stagger: .05, ease: "power3.out", scrollTrigger: { trigger: row, start: "top 70%" } });
       const evo = $(".evo ol", row);
       if (evo) {
         gsap.fromTo(evo, { "--line": 0 }, { "--line": 1, duration: 1.1, ease: "power2.out", scrollTrigger: { trigger: evo, start: "top 92%" } });
         gsap.from($$("li", evo), { y: 18, opacity: 0, duration: .7, stagger: .12, ease: "power3.out", scrollTrigger: { trigger: evo, start: "top 92%" } });
       }
-      gsap.from($$(".case-info > *", row), { y: 24, opacity: 0, duration: .8, stagger: .05, ease: "power3.out", scrollTrigger: { trigger: row, start: "top 70%" } });
-      // o anterior recua quando o próximo sobe por cima
-      const next = rows[n + 1];
-      if (stacked && next) gsap.to($(".case-card", row), { scale: .93, opacity: .35, ease: "none", scrollTrigger: { trigger: next, start: "top bottom", end: "top top", scrub: true } });
+      // sem 3D: a página inteira rola dentro da moldura do navegador, e o celular anda em outra camada
+      if (html.classList.contains("v3d") && desktop.matches) return;
+      const view = $(".browser-view", row), img = $(".long", row);
+      gsap.to(img, { y: () => -Math.max(0, img.offsetHeight - view.clientHeight), ease: "none",
+        scrollTrigger: { trigger: row, start: "top 75%", end: "bottom 25%", scrub: .4, invalidateOnRefresh: true } });
+      gsap.fromTo($(".phone", row), { yPercent: 16 }, { yPercent: -16, ease: "none", scrollTrigger: { trigger: row, start: "top bottom", end: "bottom top", scrub: true } });
     });
   });
 }
@@ -489,31 +542,37 @@ function setupAnim() {
         const a = e.target.closest('a[href^="#"]'); if (!a) return;
         const id = a.getAttribute("href"); if (id.length < 2) return;
         const t = document.querySelector(id); if (!t) return;
-        e.preventDefault(); l.scrollTo(t, { offset: id === "#inicio" ? 0 : id === "#projetos" ? 0 : -68, duration: 1.3 });
+        e.preventDefault(); l.scrollTo(t, { offset: id === "#inicio" ? 0 : -70, duration: 1.3 });
         if (id === "#conteudo") { t.setAttribute("tabindex", "-1"); t.focus({ preventScroll: true }); }
       });
     } catch (err) { /* rolagem nativa */ }
   }
   const later = [], q = fn => later.push(fn);
-  const mm = gsap.matchMedia();
 
-  /* topo: no computador fica preso enquanto os projetos sobem por cima, cortando a tela na diagonal.
-     Camadas em velocidades diferentes: texto 1.0, retrato 0.6, katana 0.35 (e ela sai das costas) */
-  mm.add("(min-width: 1024px)", () => {
-    heroPinned = true;
-    const tl = gsap.timeline({ defaults: { ease: "none" }, scrollTrigger: { trigger: ".hero", start: "top top", end: "+=100%", pin: true, pinSpacing: false, scrub: true,
-      onUpdate: st => katana?.scroll(st.progress) } });
-    tl.to(".hero-copy", { y: -220, opacity: .15 }, 0)
-      .to(".hero-photo", { y: -110, scale: .94, transformOrigin: "50% 100%" }, 0)
-      .to(".katana-stage", { y: -60 }, 0)
-      .to(".hero-glow", { opacity: .35, scale: 1.15 }, 0);
-    return () => { heroPinned = false; };
-  });
-  mm.add("(max-width: 1023px)", () => {
-    gsap.to(".hero-photo", { y: -40, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
-  });
-  // o fio vermelho do corte se desenha quando a seção entra
-  gsap.fromTo(".work", { "--draw": 0 }, { "--draw": 1, ease: "none", scrollTrigger: { trigger: ".work", start: "top bottom", end: "top 35%", scrub: true } });
+  /* topo: camadas em velocidades diferentes enquanto ele sai da tela */
+  gsap.to(".hero-copy", { y: -90, opacity: .2, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+  gsap.to(".hero-visual", { y: 60, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+  gsap.to(".hero-glow", { opacity: 0, ease: "none", scrollTrigger: { trigger: ".hero", start: "center top", end: "bottom top", scrub: true } });
+
+  /* faixa da stack: passa sem parar e acelera (e muda de sentido) com a rolagem */
+  (function marquee() {
+    const track = $("#marquee"); track.innerHTML += track.innerHTML;
+    let x = 0, boost = 0, dir = 1, py = scrollY, seen = false;
+    new IntersectionObserver(([e]) => { seen = e.isIntersecting; }).observe(track);
+    gsap.ticker.add((t, dt) => {
+      const v = scrollY - py; py = scrollY;
+      if (v) dir = v > 0 ? 1 : -1;
+      boost += (Math.min(Math.abs(v), 80) * 0.18 - boost) * 0.08;
+      if (!seen) return;
+      const half = track.scrollWidth / 2;
+      x -= (0.45 + boost) * dir * (dt / 16.7);
+      if (x <= -half) x += half; if (x > 0) x -= half;
+      track.style.transform = `translate3d(${x}px,0,0)`;
+    });
+  })();
+
+  /* palavras enormes em contorno passando no fundo das seções */
+  $$(".bg-word").forEach(el => gsap.fromTo(el, { xPercent: 8 }, { xPercent: -28, ease: "none", scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: true } }));
 
   /* títulos: palavras sobem de uma máscara, uma vez */
   q(() => $$(".split").forEach(el => {
@@ -521,18 +580,22 @@ function setupAnim() {
     gsap.from($$(".w > span", el), { yPercent: 110, duration: .9, stagger: .035, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 88%" } });
   }));
   q(() => $$(".sec-head .label, .sec-lede").forEach(el => gsap.from(el, { y: 20, opacity: 0, duration: .8, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 90%" } })));
-
-  q(animCases);
+  q(animProjs);
 
   /* outros projetos: a imagem anda dentro da moldura */
   q(() => $$(".other-shot img").forEach(img => gsap.fromTo(img, { yPercent: -5 }, { yPercent: 5, ease: "none", scrollTrigger: { trigger: img.parentElement, start: "top bottom", end: "bottom top", scrub: true } })));
 
-  /* sobre: ficha e stack em sequência; a linha do tempo se preenche com a rolagem */
+  /* stack: cartões entram em sequência */
+  q(() => ScrollTrigger.batch(".skill", { start: "top 90%", once: true, onEnter: b => gsap.from(b, { y: 40, opacity: 0, duration: .8, stagger: .07, ease: "power3.out" }) }));
+
+  /* sobre: retrato com parallax por dentro da moldura; a trajetória se preenche com a rolagem */
   q(() => {
-    gsap.from(".facts div, .stack-rows div", { y: 16, opacity: 0, duration: .6, stagger: .05, ease: "power3.out", scrollTrigger: { trigger: ".facts", start: "top 88%" } });
-    gsap.fromTo(".tl", { "--fill": 0 }, { "--fill": 1, ease: "none", scrollTrigger: { trigger: ".tl", start: "top 70%", end: "bottom 55%", scrub: true } });
-    $$(".tl li").forEach(li => ScrollTrigger.create({ trigger: li, start: "top 70%", onEnter: () => li.classList.add("on"), onLeaveBack: () => li.classList.remove("on") }));
-    gsap.from(".tl li", { x: -14, opacity: 0, duration: .7, stagger: .08, ease: "power3.out", scrollTrigger: { trigger: ".tl", start: "top 85%" } });
+    gsap.fromTo(".portrait picture", { yPercent: 6 }, { yPercent: -4, ease: "none", scrollTrigger: { trigger: ".portrait", start: "top bottom", end: "bottom top", scrub: true } });
+    gsap.from(".facts div", { y: 16, opacity: 0, duration: .6, stagger: .05, ease: "power3.out", scrollTrigger: { trigger: ".facts", start: "top 90%" } });
+    gsap.fromTo(".tl", { "--fill": 0 }, { "--fill": 1, ease: "none", scrollTrigger: { trigger: ".tl", start: "top 80%", end: "bottom 50%", scrub: true } });
+    const lis = $$(".tl li");
+    lis.forEach((li, n) => ScrollTrigger.create({ trigger: ".tl", start: () => `top+=${n * 4}% 78%`, onEnter: () => li.classList.add("on"), onLeaveBack: () => li.classList.remove("on") }));
+    gsap.from(lis, { y: 20, opacity: 0, duration: .7, stagger: .08, ease: "power3.out", scrollTrigger: { trigger: ".tl", start: "top 88%" } });
   });
 
   /* contato */
@@ -541,9 +604,9 @@ function setupAnim() {
     gsap.from(".cform", { y: 30, opacity: 0, duration: .9, ease: "power3.out", scrollTrigger: { trigger: ".cform", start: "top 90%" } });
   });
 
-  const run = () => { const fn = later.shift(); if (!fn) { ScrollTrigger.refresh(); return; } fn(); idle(run); };
+  const run = () => { const fn = later.shift(); if (!fn) { ScrollTrigger.refresh(); measure(); measureProjs(); return; } fn(); idle(run); };
   idle(run);
   document.fonts?.ready.then(() => ScrollTrigger.refresh());
-  addEventListener("load", () => ScrollTrigger.refresh());
+  addEventListener("load", () => { ScrollTrigger.refresh(); measure(); measureProjs(); });
 }
 })();

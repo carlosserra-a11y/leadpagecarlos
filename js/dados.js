@@ -15,7 +15,7 @@ var CONFIG = {
   curriculo: "",                   // link do PDF do currículo
   formspree: "",                   // código do formspree.io; vazio = o formulário abre o seu e-mail com a mensagem pronta
   buscarRepos: true,               // com o site no ar, busca repositórios novos na API do GitHub
-  katana3d: true,                  // zanpakutō em 3D no topo (sem GPU ou sem WebGL fica a imagem estática dela)
+  vitrine3d: true,                 // notebook e celular em 3D mostrando os projetos (sem GPU fica a imagem estática)
   idioma: "pt"
 };
 
@@ -133,23 +133,27 @@ var REPOS = [
 var EN = {
   docTitle:"Carlos Serra · Junior Full Stack Developer",
   docDesc:"Carlos Serra, junior full stack developer in Palhoça, Brazil. Websites and systems for real businesses with React, TypeScript, Node.js, SQLite and three.js. Open to internships and junior roles.",
-  skip:"Skip to content", navLabel:"Sections", langLabel:"PT · Ler em português", ghLabel:"GitHub (opens in a new tab)", topWa:"Let's talk",
-  nav1:"Projects", nav2:"About", nav3:"Contact",
-  kicker:"Palhoça, Brazil · open to internships and junior roles",
-  role:"Junior full stack developer",
-  lede:"I build websites and systems for real businesses: WhatsApp ordering, dashboards backed by a database and 3D showcases. I study Systems Analysis at FMP.",
-  ctaWork:"See projects", copyEmail:"Copy email",
-  p1:"<b>5</b> real clients", p2:"<b>9</b> sites live",
-  workK:"Featured projects", workT:"Projects that are live and in use",
+  skip:"Skip to content", navLabel:"Sections", langLabel:"PT · Ler em português", ghLabel:"GitHub (opens in a new tab)", topWa:"Get in touch",
+  nav1:"Projects", nav2:"Stack", nav3:"About", nav4:"Contact",
+  status:"Open to internships and junior roles · Palhoça, Brazil",
+  role:"Junior Full Stack Developer",
+  lede:"I build websites and systems for real businesses: WhatsApp ordering, dashboards backed by a database and 3D showcases. I study Systems Analysis and Development at FMP.",
+  ctaWork:"See projects", ctaWa:"Message on WhatsApp", copyEmail:"Copy email",
+  s1:"real clients", s2:"live sites", s3:"public repositories", cue:"Scroll to see the projects",
+  workK:"Featured projects", workT:"Three real clients, from request to live site",
+  workP:"Every project is published and open source. As you scroll, the screen shows the real site.",
   caseClose:"Close project details",
   moreK:"Other projects", moreH:"Two more clients, different challenges", moreT:"Exercises and first steps",
-  aboutK:"About", aboutT:"About me",
+  stackT:"What I use, with proof", stackP:"Each area points to a project where you can open the code and check.",
+  seeIn:"See it in", sk2:"Node.js, Express 5, SQLite, REST APIs, scrypt password hashing", sk3t:"3D and animation", sk4t:"Applied AI",
+  sk4:"Gemini API (text and voice), with a local fallback when there's no key", sk5t:"Quality",
+  sk5:"node:test, accessibility, CSP, Lighthouse and automated checks on GitHub Actions", thisSite:"this site", sk6t:"Tools", seeAll:"19 repositories",
+  aboutK:"About", aboutT:"I learn by building for real clients", cap:"Systems Analysis · FMP · Palhoça, Brazil",
   aboutP1:"I study Systems Analysis and Development at FMP in Palhoça, Brazil. I started coding in August 2026 and since then I've built websites and systems that 5 local businesses use: menus that take WhatsApp orders, a dashboard with login and a database, a 3D showcase.",
   aboutP2:"I like to understand how the business works before opening the editor. I want to join a team where I get code review and grow in front-end or full stack.",
   f1:"Based in", f2:"Education", f2v:"Systems Analysis, FMP (2nd term)", f3:"Work format", f3v:"On-site, hybrid or remote", f4:"Languages", f4v:"Portuguese, technical English",
-  st3:"3D and animation", st4:"AI and testing", st4v:"Gemini API, node:test, accessibility, CSP",
   copyBrief:"Copy recruiter summary", vcard:"Save contact", cv:"Résumé (PDF)",
-  tlT:"Timeline · 2026",
+  tlT:"Journey · 2026",
   t1d:"Aug 20", t1t:"First commit", t1p:"An HTML résumé and a page for my ADS classmates.",
   t2d:"Oct 1", t2t:"First real store", t2p:"CS Store: iPhone catalog, 3D showroom and trade-in calculator.",
   t3d:"Oct 5–7", t3p:"Three versions in three days, up to the 3D showroom with X-ray mode.",
@@ -157,7 +161,7 @@ var EN = {
   t5d:"Oct 11", t5t:"React + TypeScript + AI", t5p:"São Cristóvão 3.0: an assistant that builds the order, and 10 test files.",
   conK:"Contact", conT:"Let's talk", conP:"I'm available for an internship or a junior role. WhatsApp is the fastest way to reach me.",
   fT:"Or leave a message", fN:"Name", fE:"Your email", fM:"Message", fS:"Send message",
-  foot1:"Carlos Serra · junior full stack developer", foot2:"© 2026 · hand-built with HTML, CSS, JavaScript and three.js", footCode:"Source of this site",
+  foot1:"Carlos Serra · junior full stack developer", foot2:"© 2026 · hand-built with HTML, CSS, JavaScript and three.js", footCode:"Source of this site", toTop:"Back to top ↑",
   dockLabel:"Quick contact", openSite:"Open site"
 };
 
@@ -170,7 +174,7 @@ var UI = {
     newRepo:"novo", newDesc:"Projeto novo no GitHub.",
     liveOf:t => `Ver ${t} no ar`, codeOf:t => `Código de ${t} no GitHub`, versionOf:(t, v) => `${t} ${v} no ar`,
     copied:x => `Copiado: ${x}`, copyFail:x => `Selecione e copie: ${x}`, briefCopied:"Resumo copiado. É só colar no e-mail ou no ATS.",
-    vcardDone:"Contato salvo. Abra o arquivo para adicionar à agenda.", bankaiOn:"卍解 · Bankai", bankaiOff:"Bankai desligado",
+    vcardDone:"Contato salvo. Abra o arquivo para adicionar à agenda.",
     waMsg:"Olá, Carlos! Vi seu portfólio e quero conversar sobre uma oportunidade.",
     errName:"Escreva seu nome.", errEmail:"Escreva um e-mail válido, como nome@empresa.com.", errMsg:"Escreva uma mensagem com pelo menos 10 caracteres.",
     sending:"Enviando…", sent:"Mensagem enviada. Obrigado!", sendFail:"Não foi possível enviar agora. Tente pelo WhatsApp ou pelo e-mail acima.",
@@ -192,7 +196,7 @@ GitHub: https://github.com/carlosserra-a11y${extra}`
     newRepo:"new", newDesc:"New project on GitHub.",
     liveOf:t => `See ${t} live`, codeOf:t => `${t} source code on GitHub`, versionOf:(t, v) => `${t} ${v} live`,
     copied:x => `Copied: ${x}`, copyFail:x => `Select and copy: ${x}`, briefCopied:"Summary copied. Paste it into an email or your ATS.",
-    vcardDone:"Contact saved. Open the file to add it to your contacts.", bankaiOn:"卍解 · Bankai", bankaiOff:"Bankai off",
+    vcardDone:"Contact saved. Open the file to add it to your contacts.",
     waMsg:"Hi Carlos! I saw your portfolio and would like to talk about an opportunity.",
     errName:"Please enter your name.", errEmail:"Please enter a valid email, like name@company.com.", errMsg:"Please write a message with at least 10 characters.",
     sending:"Sending…", sent:"Message sent. Thank you!", sendFail:"Couldn't send right now. Try WhatsApp or the email above.",
