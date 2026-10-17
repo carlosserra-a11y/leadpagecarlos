@@ -23,6 +23,7 @@ jobs:
       - run: npx -y html-validate@9.4.1 index.html 404.html
 
   links:
+    # o 404.html usa caminhos a partir da raiz do Pages (/leadpagecarlos/...), por isso a raiz é a pasta acima do repositório
     name: Links
     runs-on: ubuntu-latest
     steps:
@@ -31,6 +32,7 @@ jobs:
         with:
           args: >-
             --no-progress --max-retries 3 --accept 200,206,429
+            --root-dir ${{ github.workspace }}/..
             --exclude "wa\.me" --exclude "fonts\.(googleapis|gstatic)\.com" --exclude "linkedin\.com"
             --exclude-path ferramentas/node_modules
             index.html 404.html README.md
