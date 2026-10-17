@@ -57,6 +57,7 @@ const parseAttr = el => el.dataset.i18nAttr.split(";").map(p => p.split(":"));
 $$("[data-i18n]").forEach(el => { el._pt = el.innerHTML; });
 $$("[data-i18n-attr]").forEach(el => { el._ptAttr = {}; parseAttr(el).forEach(([a]) => { el._ptAttr[a] = el.getAttribute(a); }); });
 let shownLang = "pt";
+let prism = null; // topo em 3D (PrismHero), quando entra
 function applyStatic() {
   html.lang = lang === "en" ? "en" : "pt-BR";
   if (lang !== shownLang) {
@@ -71,6 +72,7 @@ function applyStatic() {
 function setLang(l) {
   lang = l; store.set("lang", l);
   applyStatic(); renderProjs(); renderOthers(); renderMore(); wireContact();
+  prism?.update(prismProps());
   if (dlg.open) openCase(current, true);
   if (window.ScrollTrigger) { animProjs(); ScrollTrigger.refresh(); }
   measureProjs();
@@ -324,11 +326,12 @@ if (CONFIG.buscarRepos && ONLINE) {               // repositórios novos (cache 
 
 /* ---------- cabeçalho, seção ativa, barra do celular, progresso ---------- */
 const top = $("#top"), hero = $(".hero"), work = $("#projetos");
-let lastY = scrollY, maxS = 1, heroH = 1, workEnd = 1, rows = [];
+let lastY = scrollY, maxS = 1, heroH = 1, workTop = 0, workEnd = 1, rows = [];
 const measure = () => {
   maxS = Math.max(1, document.documentElement.scrollHeight - innerHeight);
   heroH = hero.offsetHeight || 1;
-  workEnd = work.offsetTop + work.offsetHeight;
+  workTop = work.offsetTop;
+  workEnd = workTop + work.offsetHeight;
 };
 function measureProjs() {
   rows = $$(".proj").map(el => ({ i: +el.dataset.n, top: el.getBoundingClientRect().top + scrollY, h: el.offsetHeight || 1 }));
@@ -371,6 +374,7 @@ function hasGPU() {
     const c = document.createElement("canvas"), gl = window.WebGLRenderingContext && (c.getContext("webgl2") || c.getContext("webgl"));
     if (!gl) return false;
     if (/[?&]3d=1\b/.test(location.search)) return true;
+    if (/[?&]3d=0\b/.test(location.search)) return false;
     const ex = gl.getExtension("WEBGL_debug_renderer_info");
     const name = String(gl.getParameter(ex ? ex.UNMASKED_RENDERER_WEBGL : gl.RENDERER));
     gl.getExtension("WEBGL_lose_context")?.loseContext();
@@ -378,14 +382,18 @@ function hasGPU() {
   } catch (e) { return false; }
 }
 function loadScript(src) { return new Promise((ok, fail) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = fail; document.head.appendChild(s); }); }
+// a vitrine e o topo 3D trazem cada um o seu three.js; sem isto o segundo avisa "Multiple instances of Three.js"
+const load3D = src => { try { delete window.__THREE__; } catch (e) { /* nada */ } return loadScript(src); };
 function syncVitrine() {
   if (!vitrine) return;
   const y = scrollY, mid = y + innerHeight / 2;
-  const on = desktop.matches && mid < workEnd - innerHeight * 0.15;
+  // com o cristal no topo, o notebook só aparece quando os projetos chegam
+  const crystal = html.classList.contains("prism");
+  const on = desktop.matches && mid < workEnd - innerHeight * 0.15 && (!crystal || mid > workTop + innerHeight * 0.15);
   html.classList.toggle("v3d-on", on);
   vitrine.visible(on);
   if (!on) return;
-  vitrine.mode(y / (heroH * 0.8));
+  vitrine.mode(crystal ? 1 : y / (heroH * 0.8));
   // projeto ativo: o que estiver no meio da tela; a página rola na tela conforme você atravessa o projeto
   let r = rows[0];
   for (const row of rows) if (mid >= row.top) r = row;
@@ -393,8 +401,10 @@ function syncVitrine() {
   vitrine.project(r.i);
   vitrine.scroll((mid - r.top) / r.h);
 }
-if (CONFIG.vitrine3d && ONLINE && !saveData && !reduce && desktop.matches && hasGPU()) {
-  const start = () => loadScript("lib/vitrine3d.min.js").then(() => {
+let gpu = null;
+const realGPU = () => (gpu ??= hasGPU());
+if (CONFIG.vitrine3d && ONLINE && !saveData && !reduce && desktop.matches && realGPU()) {
+  const start = () => load3D("lib/vitrine3d.min.js").then(() => {
     vitrine = window.Vitrine3D.mountVitrine($("#vitrine"), {
       accent: "#4f7cff", zoom: 0.84,
       screens: FEATURED.map(i => ({ desk: `assets/projetos/${CASES[i].shot}-longa.webp`, mob: `assets/projetos/${CASES[i].shot}-mob.webp` })),
@@ -404,6 +414,56 @@ if (CONFIG.vitrine3d && ONLINE && !saveData && !reduce && desktop.matches && has
   addEventListener("load", () => idle(start), { once: true });
   desktop.addEventListener("change", () => syncVitrine());
 }
+
+/* ---------- topo em 3D: PrismHero, o cristal que refrata o nome (React + three.js em lib/prism-hero.min.js; código em app/) ----------
+   Só com GPU de verdade, sem "reduzir movimento", sem economia de dados, sem rede lenta e sem aparelho muito fraco.
+   A altura do topo fica reservada desde já e o topo em HTML segura a tela até o 3D desenhar o primeiro quadro.
+   Erro no WebGL ou aparelho lento demais: volta para o topo em HTML. */
+function prismProps() {
+  const t = (s, r = hero) => $(s, r).textContent.trim().replace(/\s+/g, " ");
+  const wa = $(".ctas .js-wa", hero);
+  return {
+    headline: CONFIG.nome, title: t("#h-nome"),
+    eyebrow: t(".role"), description: t(".lede"),
+    meta: [t(".status"), ...$$(".stats div", hero).map(d => `${t("dd", d)} ${t("dt", d)}`)],
+    work: { label: t('[data-i18n="ctaWork"]'), href: "#projetos" },
+    chat: { label: t('[data-i18n="ctaWa"]'), href: wa.hidden ? `mailto:${CONFIG.email}` : wa.href, aria: `${t('[data-i18n="ctaWa"]')} (${U().newTab})` }
+  };
+}
+(function prismHero() {
+  const net = navigator.connection || {};
+  const fraco = /2g|3g/.test(net.effectiveType || "") || (navigator.hardwareConcurrency || 4) < 4 || (navigator.deviceMemory || 8) < 4;
+  if (!CONFIG.topo3d || reduce || saveData || fraco || !realGPU()) return;
+  const box = document.createElement("div");
+  box.className = "prism-mount";
+  hero.appendChild(box);
+  html.classList.add("prism");
+  let dead = false;
+  const off = () => {
+    if (dead) return;
+    dead = true;
+    try { prism?.unmount(); } catch (e) { /* já desmontado */ }
+    prism = null; box.remove();
+    hero.classList.remove("prism-ready"); hero.setAttribute("aria-labelledby", "h-nome");
+    html.classList.remove("prism");
+    measure(); measureProjs(); syncVitrine(); window.ScrollTrigger?.refresh();
+  };
+  // perder o contexto do WebGL (driver, aba em segundo plano no celular) = volta para o topo em HTML
+  box.addEventListener("webglcontextlost", () => setTimeout(off), true);
+  const css = new Promise((ok, fail) => {
+    const l = document.createElement("link");
+    l.rel = "stylesheet"; l.href = "css/prism-hero.css"; l.onload = ok; l.onerror = fail;
+    document.head.appendChild(l);
+  });
+  Promise.all([css, load3D("lib/prism-hero.min.js")]).then(() => {
+    if (dead) return;
+    prism = window.PrismIsland.mount(box, prismProps(), {
+      onReady: () => { if (dead) return; hero.classList.add("prism-ready"); hero.setAttribute("aria-labelledby", "h-prism"); },
+      onFail: () => setTimeout(off),
+      checkSpeed: !/[?&]3d=1\b/.test(location.search)
+    });
+  }).catch(off);
+})();
 
 /* ---------- interações com o mouse: luz do topo, cartões da stack, etiqueta "Abrir site", botões com atração ---------- */
 if (finePointer && !reduce) {

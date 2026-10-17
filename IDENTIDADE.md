@@ -35,7 +35,7 @@ O destaque visual vem do próprio trabalho: os sites dos clientes aparecem de ve
 
 ## Movimento
 
-- Topo: entrada em CSS; ao rolar, texto, vitrine e luz andam em velocidades diferentes.
+- Topo: com GPU, o cristal 3D (PrismHero) refrata o nome; texto em Geist Mono caixa-alta, botão sólido azul cobalto e botão de contorno, fatos em linha no rodapé do topo. Sem 3D: entrada em CSS e, ao rolar, texto, vitrine e luz andam em velocidades diferentes.
 - Fundo: grade de pontos com parallax, onda passando e luz perto do mouse.
 - Faixa da stack: passa sem parar e acelera (e muda de sentido) com a rolagem.
 - Seções: palavra enorme em contorno passando no fundo; títulos sobem palavra por palavra.

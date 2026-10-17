@@ -1,0 +1,33 @@
+/* Tailwind v4 no padrão do shadcn, com dois cuidados porque este CSS entra no site estático:
+   1. sem o preflight (o reset global), que mexeria em todo o resto da página;
+   2. utilitários fora de @layer: o css/style.css do site não usa camadas, e CSS sem camada
+      sempre ganha de CSS em camada; assim um `a{color:inherit}` do site não apaga um `text-white`. */
+@import "tailwindcss/theme.css";
+@import "tailwindcss/utilities.css";
+
+/* Tokens no formato do shadcn, com as cores e fontes da identidade do site.
+   Ficam presos em .prism-island (e não em :root) porque o site já usa --accent e --radius com outros valores. */
+.prism-island {
+  --background: #0a0c10;
+  --foreground: #e8ecf2;
+  --primary: #2f5bea;
+  --primary-foreground: #ffffff;
+  --muted-foreground: #98a2b3;
+  --accent: #4f7cff;
+  --border: rgba(232, 236, 242, 0.15);
+  --radius: 0.625rem;
+  --font-sans: "Geist", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-display: "Geist", "Helvetica Neue", Arial, sans-serif;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --radius-lg: var(--radius);
+}

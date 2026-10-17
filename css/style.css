@@ -139,12 +139,21 @@ main,.foot{position:relative;z-index:1}
 .stats dt{font-size:.85rem;color:var(--muted)}
 .hero-visual{grid-column:6 / span 7;grid-row:1;position:relative;z-index:1;margin-right:-4vw}
 .vitrine-poster img{width:100%;height:auto;transition:opacity .7s var(--ease)}
-html.v3d-ready .vitrine-poster img{opacity:0}
+html.v3d-ready:not(.prism) .vitrine-poster img{opacity:0}
+/* topo em 3D (PrismHero: css/prism-hero.css + lib/prism-hero.min.js, código em app/).
+   A altura já fica reservada; o topo em HTML segura a tela até o primeiro quadro do 3D e aí os dois trocam. */
+html.prism .hero{display:block;min-height:200vh;padding:0;overflow:clip}
+html.prism .hero-in{position:sticky;top:0;min-height:max(680px,100svh);padding-top:calc(70px + 3rem);padding-bottom:5rem;align-content:center}
+html.prism .scroll-cue{display:none}
+.prism-mount{position:absolute;inset:0;z-index:3;opacity:0;visibility:hidden;transition:opacity .9s var(--ease),visibility 0s .9s}
+.hero.prism-ready .prism-mount{opacity:1;visibility:visible;transition:opacity .9s var(--ease)}
+.hero.prism-ready .hero-in,.hero.prism-ready .hero-glow{opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility 0s .5s}
 .scroll-cue{position:absolute;left:50%;bottom:1.6rem;transform:translateX(-50%);display:grid;justify-items:center;gap:.6rem;font:500 .72rem/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);text-decoration:none}
 .scroll-cue i{width:1px;height:34px;background:linear-gradient(var(--accent-hi),transparent);transform-origin:50% 0;animation:cue 2s var(--ease) infinite}
 @keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
 @media (max-width:1023px){
   .hero{min-height:0;padding-top:calc(70px + 2.5rem)}
+  html.prism .hero-in{min-height:0;padding-top:calc(70px + 2.5rem);align-content:start}
   .hero-in{grid-template-columns:1fr;row-gap:2rem}
   .hero-copy,.hero-visual{grid-column:1;grid-row:auto}
   .hero-visual{margin:0 -6vw}

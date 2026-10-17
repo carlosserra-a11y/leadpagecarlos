@@ -16,6 +16,7 @@ var CONFIG = {
   formspree: "",                   // código do formspree.io; vazio = o formulário abre o seu e-mail com a mensagem pronta
   buscarRepos: true,               // com o site no ar, busca repositórios novos na API do GitHub
   vitrine3d: true,                 // notebook e celular em 3D mostrando os projetos (sem GPU fica a imagem estática)
+  topo3d: true,                    // topo com o cristal 3D (PrismHero, React); sem GPU fica o topo em HTML
   idioma: "pt"
 };
 
@@ -171,7 +172,7 @@ var UI = {
     details:"Detalhes do projeto", live:"Site no ar", code:"Código", liveFull:"Ver ao vivo", codeFull:"Código no GitHub",
     ctx:"Contexto", did:"O que eu fiz", dec:"Decisões técnicas", stack:"Stack", check:"Como conferir", evo:"Evolução", prev:"Anterior", next:"Próximo",
     shotAlt:"Captura de tela do site", shotDesk:"Computador", shotMob:"Celular", now:"atual",
-    newRepo:"novo", newDesc:"Projeto novo no GitHub.",
+    newRepo:"novo", newDesc:"Projeto novo no GitHub.", newTab:"abre em nova aba",
     liveOf:t => `Ver ${t} no ar`, codeOf:t => `Código de ${t} no GitHub`, versionOf:(t, v) => `${t} ${v} no ar`,
     copied:x => `Copiado: ${x}`, copyFail:x => `Selecione e copie: ${x}`, briefCopied:"Resumo copiado. É só colar no e-mail ou no ATS.",
     vcardDone:"Contato salvo. Abra o arquivo para adicionar à agenda.",
@@ -193,7 +194,7 @@ GitHub: https://github.com/carlosserra-a11y${extra}`
     details:"Project details", live:"Live site", code:"Code", liveFull:"See it live", codeFull:"Code on GitHub",
     ctx:"Context", did:"What I built", dec:"Technical decisions", stack:"Stack", check:"How to verify", evo:"Evolution", prev:"Previous", next:"Next",
     shotAlt:"Screenshot of the site", shotDesk:"Desktop", shotMob:"Mobile", now:"current",
-    newRepo:"new", newDesc:"New project on GitHub.",
+    newRepo:"new", newDesc:"New project on GitHub.", newTab:"opens in a new tab",
     liveOf:t => `See ${t} live`, codeOf:t => `${t} source code on GitHub`, versionOf:(t, v) => `${t} ${v} live`,
     copied:x => `Copied: ${x}`, copyFail:x => `Select and copy: ${x}`, briefCopied:"Summary copied. Paste it into an email or your ATS.",
     vcardDone:"Contact saved. Open the file to add it to your contacts.",
