@@ -3,27 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Página não encontrada · Carlos Serra</title>
+<title>Página não encontrada · carlos@serra</title>
 <meta name="robots" content="noindex">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-zhR4X1ECKHRucj1yyYidRZbz1G0bl2W6bvsMejwy5N8='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; base-uri 'self'; object-src 'none'; frame-src 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="theme-color" content="#0a0c10">
+<link rel="icon" href="/leadpagecarlos/assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/leadpagecarlos/assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&amp;family=Geist+Mono:wght@500&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500..700&amp;family=Geist:wght@400..600&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap">
 <style>
 /* Página 404 independente: funciona em qualquer endereço quebrado do site */
-:root{--bg:#0a0c10;--line:#1c212b;--txt:#e8ecf2;--muted:#98a2b3;--accent:#2f5bea;--accent-txt:#8fb0ff;color-scheme:dark}
+:root{--bg:#0a0c10;--line:#1c212b;--txt:#e8ecf2;--muted:#98a2b3;--dim:#667085;--accent:#2f5bea;--accent-hi:#4f7cff;--accent-txt:#8fb0ff;color-scheme:dark}
 *{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--txt);font:400 1.05rem/1.6 "Geist",system-ui,sans-serif;display:grid;place-items:center;overflow:hidden;
+html,body{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--txt);font:400 1.05rem/1.6 "Geist",system-ui,sans-serif;display:grid;place-items:center;min-height:100svh;
   padding:24px max(16px,env(safe-area-inset-right)) 24px max(16px,env(safe-area-inset-left))}
-body::before{content:"";position:fixed;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:64px 64px;opacity:.35;-webkit-mask-image:radial-gradient(70% 60% at 50% 50%,#000,transparent);mask-image:radial-gradient(70% 60% at 50% 50%,#000,transparent)}
-.wrap{position:relative;display:grid;gap:1.1rem;max-width:620px;width:100%}
-.mono{font:500 .78rem "Geist Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-txt);margin:0}
-h1{margin:0;font:600 clamp(2.6rem,9vw,5rem)/.95 "Geist",sans-serif;letter-spacing:-.045em}
-.cut{display:block;height:3px;width:min(260px,60%);background:var(--accent);transform-origin:left;animation:cut .6s cubic-bezier(.7,0,.2,1) both .15s}
+body::before{content:"";position:fixed;inset:0;background-image:radial-gradient(rgba(232,236,242,.1) 1.2px,transparent 1.4px);background-size:30px 30px;
+  -webkit-mask-image:radial-gradient(70% 60% at 50% 50%,#000,transparent);mask-image:radial-gradient(70% 60% at 50% 50%,#000,transparent)}
+.wrap{position:relative;display:grid;gap:1.1rem;max-width:640px;width:100%}
+.brand{display:inline-flex;align-items:center;gap:.6rem;font:700 1rem/1 "JetBrains Mono",ui-monospace,monospace;letter-spacing:-.03em;color:var(--txt);text-decoration:none;justify-self:start}
+.brand svg{width:34px;height:34px}
+.brand b{color:var(--accent-hi)}
+.term{margin:0;font:500 .86rem/1.7 "JetBrains Mono",ui-monospace,monospace;color:var(--muted);white-space:pre-wrap}
+.term span{color:var(--accent-txt)}
+.term em{font-style:normal;color:#fda29b}
+h1{margin:0;font:600 clamp(2.6rem,9vw,5rem)/.95 "Space Grotesk","Geist",sans-serif;letter-spacing:-.05em}
+.cut{display:block;height:3px;width:min(260px,60%);background:linear-gradient(90deg,var(--accent),var(--accent-hi));transform-origin:left;animation:cut .6s cubic-bezier(.7,0,.2,1) both .15s}
 @keyframes cut{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 p{margin:0;color:var(--muted);max-width:46ch}
 .acts{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:.4rem}
@@ -31,13 +38,18 @@ a.btn{display:inline-flex;align-items:center;gap:.5rem;min-height:46px;padding:0
 a.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
 a.btn:hover{border-color:var(--txt)}
 a.btn.primary:hover{background:#3d68f2;border-color:#3d68f2}
+.caret{display:inline-block;width:.55em;height:1.05em;vertical-align:-.16em;background:var(--accent-hi);animation:blink 1.06s steps(2,start) infinite}
+@keyframes blink{to{visibility:hidden}}
 :focus-visible{outline:2px solid var(--accent-txt);outline-offset:3px}
-@media (prefers-reduced-motion:reduce){.cut{animation:none}}
+@media (prefers-reduced-motion:reduce){.cut,.caret{animation:none}}
 </style>
 </head>
 <body>
 <main class="wrap">
-  <p class="mono">Erro 404</p>
+  <a class="brand" href="/leadpagecarlos/" aria-label="carlos@serra, início"><svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8fb0ff"/><stop offset="1" stop-color="#2f5bea"/></linearGradient></defs><path d="M39 11.65 24 3 5.81 13.5v21L24 45l15-8.65" fill="none" stroke="url(#g)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="m16 18.5 7 5.5-7 5.5" fill="none" stroke="#e8ecf2" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="25.5" y="28" width="9" height="3" rx="1.2" fill="#4f7cff"/></svg><span>carlos<b>@</b>serra</span></a>
+  <p class="term" aria-hidden="true"><span>carlos@serra:~$</span> cd esta-pagina
+<em>erro 404: não encontrado</em>
+<span>carlos@serra:~$</span> <i class="caret"></i></p>
   <h1>Esta página não existe.</h1>
   <span class="cut" aria-hidden="true"></span>
   <p>O endereço mudou ou foi digitado errado. O portfólio continua no mesmo lugar.</p>

@@ -17,8 +17,8 @@
   --border: rgba(232, 236, 242, 0.15);
   --radius: 0.625rem;
   --font-sans: "Geist", "Helvetica Neue", Arial, system-ui, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  --font-display: "Geist", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-display: "Space Grotesk", "Geist", "Helvetica Neue", Arial, sans-serif;
 }
 
 @theme inline {

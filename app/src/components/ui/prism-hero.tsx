@@ -318,6 +318,7 @@ function Scene({
   tint,
   moteColor,
   spec,
+  envColors,
 }: {
   headline: string
   headlineColor: string
@@ -329,6 +330,7 @@ function Scene({
   tint: string
   moteColor: string
   spec: QualitySpec
+  envColors: [string, string, string, string]
 }) {
   const texture = useHeadlineTexture(headline, headlineColor, displayFont, italic)
 
@@ -340,25 +342,25 @@ function Scene({
           intensity={5}
           position={[0, 5, 4]}
           scale={[12, 4, 1]}
-          color="#fff6e2"
+          color={envColors[0]}
         />
         <Lightformer
           intensity={3.2}
           position={[-6, 1, 3]}
           scale={[4, 9, 1]}
-          color="#bcd6ff"
+          color={envColors[1]}
         />
         <Lightformer
           intensity={2.6}
           position={[6, -2, 2]}
           scale={[5, 6, 1]}
-          color="#ffcf96"
+          color={envColors[2]}
         />
         <Lightformer
           intensity={1.8}
           position={[0, -4, -3]}
           scale={[9, 3, 1]}
-          color="#ffffff"
+          color={envColors[3]}
         />
       </Environment>
 
@@ -466,6 +468,12 @@ export interface PrismHeroProps {
   topInset?: boolean
   /** Horizontal padding of the copy layer (e.g. to line it up with a site container). */
   contentClassName?: string
+  /** Colours of the four studio lightformers (top, left, right, floor). */
+  envColors?: [string, string, string, string]
+  /** false holds the copy entrance (e.g. while a site preloader is still up). */
+  play?: boolean
+  /** Extra layer inside the pinned stage, above the vignette (HUD, labels…). */
+  overlay?: React.ReactNode
   className?: string
 }
 
@@ -487,6 +495,9 @@ export function PrismHero({
   sceneChildren,
   topInset = false,
   contentClassName = "px-5 sm:px-10",
+  envColors = ["#fff6e2", "#bcd6ff", "#ffcf96", "#ffffff"],
+  play = true,
+  overlay,
   className,
 }: PrismHeroProps) {
   const sectionRef = React.useRef<HTMLDivElement>(null)
@@ -528,12 +539,13 @@ export function PrismHero({
   // throttled in hidden tabs, which would otherwise strand the springs
   // mid-flight and reveal a half-faded hero when the tab regains focus.
   React.useEffect(() => {
+    if (!play) return
     if (prefersReduced || document.hidden) {
       controls.set("show")
       return
     }
     controls.start("show")
-  }, [controls, prefersReduced])
+  }, [controls, prefersReduced, play])
 
   const railRef = React.useRef<HTMLDivElement>(null)
 
@@ -633,6 +645,7 @@ export function PrismHero({
               tint={tint}
               moteColor={accent}
               spec={spec}
+              envColors={envColors}
             />
             {sceneChildren}
           </Canvas>
@@ -654,6 +667,8 @@ export function PrismHero({
               "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E\")",
           }}
         />
+
+        {overlay}
 
         {/* Copy ------------------------------------------------------------ */}
         <motion.div

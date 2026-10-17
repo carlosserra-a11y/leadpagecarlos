@@ -8,6 +8,7 @@
 <meta name="author" content="Carlos Serra">
 <meta name="theme-color" content="#0a0c10">
 <link rel="canonical" href="https://carlosserra-a11y.github.io/leadpagecarlos/">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="icon" href="assets/icon-192.png" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="assets/icon-180.png">
@@ -18,7 +19,7 @@
 <meta property="og:image" content="https://carlosserra-a11y.github.io/leadpagecarlos/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Carlos Serra, desenvolvedor full stack júnior, com um notebook mostrando um dos projetos">
+<meta property="og:image:alt" content="carlos@serra: Carlos Serra, desenvolvedor full stack júnior, com um notebook mostrando um dos projetos">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:locale:alternate" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
@@ -26,7 +27,7 @@
 <meta name="twitter:description" content="Sites e sistemas para negócios reais: pedidos, banco de dados, 3D e IA.">
 <meta name="twitter:image" content="https://carlosserra-a11y.github.io/leadpagecarlos/assets/og.png">
 <!-- Segurança: só roda script deste site (e o script inline abaixo, pelo hash). Atualizado por ferramentas/cabecalho.mjs -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-pMu12U2fLfnqSzS3WBikqJaWwKPQImO+Z0geIitqhWw='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; connect-src 'self' https://api.github.com https://formspree.io; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-P90L351miScPCQHmaLhD1WwfIQ07iH9MkE1pwIVOoSI='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self'; connect-src 'self' https://api.github.com https://formspree.io; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; frame-src 'none'; worker-src 'none'; manifest-src 'self'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="format-detection" content="telephone=no">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,23 +35,33 @@
 <link rel="stylesheet" href="css/style.css">
 <link rel="preload" as="image" type="image/avif" href="assets/vitrine/vitrine-900.avif" imagesrcset="assets/vitrine/vitrine-900.avif 900w, assets/vitrine/vitrine-1400.avif 1400w" imagesizes="(max-width: 1023px) 94vw, 56vw">
 <script>
-/* Antes da primeira pintura: marca que há JavaScript e carrega as fontes sem bloquear a pintura
-   (as URLs são gravadas por ferramentas/cabecalho.mjs). */
+/* Antes da primeira pintura: marca que há JavaScript, decide se a tela de carregamento aparece
+   (só na primeira visita da sessão, nunca com "reduzir movimento"; ?intro=1 força) e carrega as fontes
+   sem bloquear a pintura (as URLs são gravadas por ferramentas/cabecalho.mjs). */
 (function () {
-  document.documentElement.classList.add("js");
-  var FONTES = /*FONTES*/["https://fonts.googleapis.com/css2?family=Geist:wght@300..800&family=Geist+Mono:wght@400;500&display=swap"]/*FIM*/;
+  var d = document.documentElement, intro = true;
+  d.classList.add("js");
+  try {
+    if (sessionStorage.getItem("cs-intro")) intro = false;
+    if (/[?&]intro=1\b/.test(location.search)) intro = true;
+    if (/[?&]intro=0\b/.test(location.search)) intro = false;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) intro = false;
+  } catch (e) { /* sem sessionStorage: mostra */ }
+  d.classList.add(intro ? "intro" : "entrou");
+  var FONTES = /*FONTES*/["https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=Geist:wght@300..700&family=JetBrains+Mono:wght@400..700&display=swap"]/*FIM*/;
   for (var i = 0; i < FONTES.length; i++) {
     var l = document.createElement("link"); l.rel = "preload"; l.as = "style"; l.href = FONTES[i];
     l.onload = function () { this.onload = null; this.rel = "stylesheet"; }; document.head.appendChild(l);
   }
 })();
 </script>
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&amp;family=Geist+Mono:wght@400;500&amp;display=swap"></noscript>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&amp;family=Geist:wght@300..700&amp;family=JetBrains+Mono:wght@400..700&amp;display=swap"></noscript>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Person",
   "name": "Carlos Serra",
+  "alternateName": "carlos@serra",
   "jobTitle": "Desenvolvedor Full Stack Júnior",
   "url": "https://carlosserra-a11y.github.io/leadpagecarlos/",
   "image": "https://carlosserra-a11y.github.io/leadpagecarlos/assets/foto/carlos-820.jpg",
@@ -65,6 +76,8 @@
 </head>
 <body>
 <svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs><linearGradient id="lg-logo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8fb0ff"/><stop offset="1" stop-color="#2f5bea"/></linearGradient></defs>
+  <symbol id="logo" viewBox="0 0 48 48"><path d="M39 11.65 24 3 5.81 13.5v21L24 45l15-8.65" fill="none" stroke="url(#lg-logo)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="m16 18.5 7 5.5-7 5.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect class="logo-cur" x="25.5" y="28" width="9" height="3" rx="1.2" fill="#4f7cff"/></symbol>
   <symbol id="i-gh" viewBox="0 0 24 24"><path fill="currentColor" d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 23.5 12C23.5 5.7 18.3.5 12 .5z"/></symbol>
   <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M20.5 3.5A11.8 11.8 0 0 0 1.9 17.7L.3 23.7l6.1-1.6A11.8 11.8 0 0 0 20.5 3.5zM12 21.6c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.6.9 1-3.5-.2-.4A9.8 9.8 0 1 1 12 21.6zm5.4-7.3c-.3-.1-1.8-.9-2-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1a8 8 0 0 1-2.4-1.5 9 9 0 0 1-1.6-2c-.2-.3 0-.5.1-.6l.4-.5.3-.5v-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6a1.1 1.1 0 0 0-.8.4 3.4 3.4 0 0 0-1 2.5 5.9 5.9 0 0 0 1.2 3.1 13.4 13.4 0 0 0 5.2 4.6c.7.3 1.3.5 1.7.6a4.2 4.2 0 0 0 1.9.1 3.2 3.2 0 0 0 2.1-1.5 2.6 2.6 0 0 0 .2-1.5c-.1-.1-.3-.2-.6-.4z"/></symbol>
   <symbol id="i-mail" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" d="M3 5h18v14H3zM3 6l9 7 9-7"/></symbol>
@@ -73,11 +86,41 @@
   <symbol id="i-out" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M7 17 17 7M9 7h8v8"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="11" height="11" rx="1"/><path d="M5 15V4h11"/></g></symbol>
   <symbol id="i-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 4v13M6 11l6 6 6-6M4 21h16"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="M12 20V5M6 11l6-6 6 6"/></symbol>
+  <symbol id="i-cmd" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="m5 8 4 4-4 4M12 17h7"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></g></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></g></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" d="m9 6 6 6-6 6"/></symbol>
 </svg>
+
+<!-- ================= TELA DE CARREGAMENTO =================
+     Só na primeira visita da sessão (decidido no script do <head>). O nome se decodifica conforme a página carrega;
+     sem JavaScript ela nem aparece, e uma animação em CSS a tira da frente em 4 s se o script falhar. -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="ld-in">
+    <p class="ld-top"><span class="ld-prompt">carlos@serra:~$</span> <span data-i18n="ldCmd">./portfolio --iniciar</span></p>
+    <div class="ld-mid">
+      <svg class="ld-logo"><use href="#logo"/></svg>
+      <p class="ld-name" id="ldName"><span style="--i:0">C</span><span style="--i:1">A</span><span style="--i:2">R</span><span style="--i:3">L</span><span style="--i:4">O</span><span style="--i:5">S</span><span class="sp" style="--i:6"> </span><span style="--i:7">S</span><span style="--i:8">E</span><span style="--i:9">R</span><span style="--i:10">R</span><span style="--i:11">A</span></p>
+      <p class="ld-role" data-i18n="role">Desenvolvedor Full Stack Júnior</p>
+    </div>
+    <ol class="ld-log" id="ldLog">
+      <li><span data-i18n="ld1">fontes e estilos</span><b>ok</b></li>
+      <li><span data-i18n="ld2">projetos e capturas</span><b>ok</b></li>
+      <li><span data-i18n="ld3">cena 3D</span><b>ok</b></li>
+    </ol>
+    <div class="ld-bottom">
+      <span class="ld-num"><span class="ld-n-css"></span><span id="ldNum">000</span>%</span>
+      <span class="ld-bar"><i id="ldBar"></i></span>
+      <span class="ld-skip" data-i18n="ldSkip">tecle ou role para pular</span>
+    </div>
+  </div>
+</div>
 
 <a class="skip" href="#conteudo" data-i18n="skip">Pular para o conteúdo</a>
 <div class="progress" aria-hidden="true"><i id="progress"></i></div>
-<!-- fundo vivo: grade de pontos que anda com a rolagem e acende perto do mouse -->
+<!-- fundo vivo: grade de pontos que anda com a rolagem; perto do mouse, os pontos viram código -->
 <canvas class="bg-grid" id="bgGrid" aria-hidden="true"></canvas>
 <!-- vitrine 3D: notebook e celular com os projetos na tela (só no computador com GPU) -->
 <canvas class="vitrine" id="vitrine" aria-hidden="true"></canvas>
@@ -85,14 +128,19 @@
 <!-- ================= CABEÇALHO ================= -->
 <header class="top" id="top">
   <div class="wrap top-in">
-    <a class="brand" href="#inicio" aria-label="Carlos Serra, início"><span class="mark" aria-hidden="true">cs</span><span>Carlos Serra</span></a>
+    <a class="brand" href="#inicio" aria-label="carlos@serra · Carlos Serra, início" data-i18n-attr="aria-label:brandLabel">
+      <svg class="logo" aria-hidden="true"><use href="#logo"/></svg>
+      <span class="brand-w" aria-hidden="true">carlos<b>@</b>serra<i class="caret"></i></span>
+    </a>
     <nav class="nav" aria-label="Seções" data-i18n-attr="aria-label:navLabel">
-      <a href="#projetos" data-i18n="nav1">Projetos</a>
-      <a href="#stack" data-i18n="nav2">Stack</a>
-      <a href="#sobre" data-i18n="nav3">Sobre</a>
-      <a href="#contato" data-i18n="nav4">Contato</a>
+      <a href="#projetos" data-scramble><span class="n" aria-hidden="true">01</span><span data-i18n="nav1">Projetos</span></a>
+      <a href="#outros" data-scramble><span class="n" aria-hidden="true">02</span><span data-i18n="footIdx">Arquivo</span></a>
+      <a href="#stack" data-scramble><span class="n" aria-hidden="true">03</span><span data-i18n="nav2">Stack</span></a>
+      <a href="#sobre" data-scramble><span class="n" aria-hidden="true">04</span><span data-i18n="nav3">Sobre</span></a>
+      <a href="#contato" data-scramble><span class="n" aria-hidden="true">05</span><span data-i18n="nav4">Contato</span></a>
     </nav>
     <div class="top-actions">
+      <button class="chip-btn kbd-btn" id="cmdBtn" type="button" aria-haspopup="dialog"><svg aria-hidden="true"><use href="#i-cmd"/></svg><span class="sr-only" data-i18n="cmdLabel">Atalhos</span><kbd id="cmdKey">Ctrl K</kbd></button>
       <button class="chip-btn" id="langBtn" type="button" aria-label="EN · Read in English" data-i18n-attr="aria-label:langLabel"><span id="langTxt" aria-hidden="true">EN</span></button>
       <a class="chip-btn icon" href="https://github.com/carlosserra-a11y" target="_blank" rel="noopener noreferrer" aria-label="GitHub (abre em nova aba)" data-i18n-attr="aria-label:ghLabel"><svg aria-hidden="true"><use href="#i-gh"/></svg></a>
       <a class="btn btn-solid btn-sm js-wa" href="https://wa.me/5548996170281" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="topWa">Fale comigo</span></a>
@@ -104,11 +152,18 @@
   <!-- ================= TOPO ================= -->
   <section class="hero" id="inicio" aria-labelledby="h-nome">
     <div class="hero-glow" aria-hidden="true"></div>
+    <!-- moldura de detalhes (HUD): cantos, local, hora, posição do mouse -->
+    <div class="hud" aria-hidden="true">
+      <i class="hud-c tl"></i><i class="hud-c tr"></i><i class="hud-c bl"></i><i class="hud-c br"></i>
+      <p class="hud-geo"><span>Palhoça · SC · BR</span><span>27°38′S 48°40′W</span><span class="js-only"><b class="js-clock">--:--:--</b> BRT</span></p>
+      <p class="hud-xy">x <b id="hudX">0000</b> · y <b id="hudY">0000</b></p>
+      <p class="hud-ver">v8.0 · <span data-i18n="hudBuild">feito à mão</span></p>
+    </div>
     <div class="wrap hero-in">
       <div class="hero-copy">
         <p class="status"><span class="dot" aria-hidden="true"></span><span data-i18n="status">Disponível para estágio ou vaga júnior · Palhoça, SC</span></p>
-        <h1 id="h-nome"><span class="ln"><span>Carlos Serra</span></span></h1>
-        <p class="role" data-i18n="role">Desenvolvedor Full Stack Júnior</p>
+        <h1 id="h-nome"><span class="ln"><span>Carlos</span></span> <span class="ln"><span>Serra</span></span></h1>
+        <p class="role"><span class="role-k" aria-hidden="true">&gt;</span> <span data-i18n="role">Desenvolvedor Full Stack Júnior</span></p>
         <p class="lede" data-i18n="lede">Faço sites e sistemas para negócios reais: pedido pelo WhatsApp, painel com banco de dados e vitrine em 3D. Estudo Análise e Desenvolvimento de Sistemas na FMP.</p>
         <div class="ctas">
           <a class="btn btn-solid magnet" href="#projetos"><span data-i18n="ctaWork">Ver projetos</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
@@ -116,9 +171,9 @@
         </div>
         <p class="hero-mail"><a class="js-mail" href="mailto:carlosserraap55@gmail.com">carlosserraap55@gmail.com</a><button class="copy-mini" type="button" data-copy="email" aria-label="Copiar e-mail" data-i18n-attr="aria-label:copyEmail"><svg aria-hidden="true"><use href="#i-copy"/></svg></button></p>
         <dl class="stats">
-          <div><dt data-i18n="s1">clientes reais</dt><dd>5</dd></div>
-          <div><dt data-i18n="s2">sites no ar</dt><dd>9</dd></div>
-          <div><dt data-i18n="s3">repositórios públicos</dt><dd>19</dd></div>
+          <div><dt data-i18n="s1">clientes reais</dt><dd data-count="5">5</dd></div>
+          <div><dt data-i18n="s2">sites no ar</dt><dd data-count="9">9</dd></div>
+          <div><dt data-i18n="s3">repositórios públicos</dt><dd data-count="19">19</dd></div>
         </dl>
       </div>
       <div class="hero-visual" aria-hidden="true">
@@ -126,12 +181,17 @@
           <source type="image/avif" srcset="assets/vitrine/vitrine-900.avif 900w, assets/vitrine/vitrine-1400.avif 1400w" sizes="(max-width: 1023px) 94vw, 56vw">
           <img src="assets/vitrine/vitrine-900.webp" srcset="assets/vitrine/vitrine-900.webp 900w, assets/vitrine/vitrine-1400.webp 1400w" sizes="(max-width: 1023px) 94vw, 56vw" width="1400" height="1000" alt="" fetchpriority="high">
         </picture>
+        <!-- janela de terminal: comandos digitados depois da entrada -->
+        <div class="term" id="heroTerm">
+          <p class="term-bar"><i></i><i></i><i></i><span>~/carlos — zsh</span></p>
+          <pre class="term-body" id="termBody"></pre>
+        </div>
       </div>
     </div>
     <a class="scroll-cue" href="#projetos"><span data-i18n="cue">Role para ver os projetos</span><i aria-hidden="true"></i></a>
   </section>
 
-  <!-- faixa da stack, passando sem parar (acelera com a rolagem) -->
+  <!-- faixa da stack, passando sem parar (acelera com a rolagem; para com o mouse em cima) -->
   <div class="marquee" aria-hidden="true">
     <div class="marquee-track" id="marquee">
       <span>React 19</span><span>TypeScript</span><span>Node.js</span><span>Express 5</span><span>SQLite</span><span>three.js</span><span>WebGL</span><span>GSAP</span><span>Tailwind</span><span>Vite</span><span>Gemini API</span><span>node:test</span><span>GitHub Actions</span>
@@ -143,9 +203,9 @@
     <span class="bg-word" aria-hidden="true">Projetos</span>
     <div class="wrap">
       <header class="sec-head">
-        <p class="label"><span class="num">01</span><span data-i18n="workK">Projetos em destaque</span></p>
+        <p class="label"><span class="num">01</span><span class="slash" aria-hidden="true">/</span><span data-i18n="workK">Projetos em destaque</span></p>
         <h2 id="h-work" class="split" data-i18n="workT">Três clientes reais, do pedido ao site no ar</h2>
-        <p class="sec-lede" data-i18n="workP">Cada projeto está publicado e com o código aberto. Enquanto você rola, a tela mostra o site de verdade.</p>
+        <p class="sec-lede" data-i18n="workP">Cada projeto conta o desafio, o que eu construí e como conferir. Enquanto você rola, a tela mostra o site de verdade.</p>
       </header>
     </div>
     <div class="projs" id="projs"></div>
@@ -160,44 +220,66 @@
     </noscript>
   </section>
 
+  <!-- navegação entre os destaques: aparece só enquanto você está nos projetos (computador) -->
+  <nav class="pnav" id="pnav" aria-label="Projetos em destaque" data-i18n-attr="aria-label:workK">
+    <button class="pnav-b" type="button" data-pgo="-1" aria-label="Projeto anterior" data-i18n-attr="aria-label:prevProj"><svg aria-hidden="true"><use href="#i-up"/></svg></button>
+    <p class="pnav-t"><span class="pnav-i" id="pnavI">01</span><span class="pnav-of">/ 03</span><span class="pnav-name" id="pnavName"></span></p>
+    <span class="pnav-bar" aria-hidden="true"><i id="pnavBar"></i></span>
+    <button class="pnav-b down" type="button" data-pgo="1" aria-label="Próximo projeto" data-i18n-attr="aria-label:nextProj"><svg aria-hidden="true"><use href="#i-down"/></svg></button>
+  </nav>
+
   <dialog class="case-dlg" id="caseDialog" aria-labelledby="caseTitle">
-    <div class="case-box">
+    <div class="case-box" data-lenis-prevent>
       <button class="case-close" id="caseClose" type="button" aria-label="Fechar detalhes do projeto" data-i18n-attr="aria-label:caseClose">✕</button>
       <div class="case-main" id="caseMain"></div>
     </div>
   </dialog>
 
-  <!-- ================= OUTROS PROJETOS ================= -->
+  <!-- ================= OUTROS CLIENTES + ÍNDICE ================= -->
   <section class="section paper" id="outros" aria-labelledby="h-more">
     <div class="wrap">
       <header class="sec-head">
-        <p class="label"><span class="num">02</span><span data-i18n="moreK">Outros projetos</span></p>
-        <h2 id="h-more" class="split" data-i18n="moreH">Mais dois clientes, outros desafios</h2>
+        <p class="label"><span class="num">02</span><span class="slash" aria-hidden="true">/</span><span data-i18n="moreK">Outros clientes e arquivo</span></p>
+        <h2 id="h-more" class="split" data-i18n="moreH">Mais dois clientes e tudo o que eu já publiquei</h2>
       </header>
       <div class="others" id="others"></div>
-      <details class="more">
-        <summary><span data-i18n="moreT">Exercícios e primeiros passos</span> <span class="count" id="moreCount"></span></summary>
-        <ul class="more-list" id="moreList"></ul>
-      </details>
+      <noscript>
+        <ul class="nojs-list nojs-paper">
+          <li><a href="https://carlosserra-a11y.github.io/ingrid-market/">Ingrid Lima</a> · landing page com olho realista em WebGL</li>
+          <li><a href="https://carlosserra-a11y.github.io/csiphone/">CS Store</a> · loja de iPhones com showroom 3D</li>
+          <li><a href="https://github.com/carlosserra-a11y?tab=repositories">Todos os repositórios no GitHub</a></li>
+        </ul>
+      </noscript>
+
+      <div class="index" id="index">
+        <div class="index-head">
+          <h3 class="index-t"><span class="index-k" aria-hidden="true">ls -la ~/</span><span data-i18n="idxT">Arquivo completo</span> <span class="count" id="idxCount"></span></h3>
+          <div class="filters" id="filters" role="group" aria-label="Filtrar projetos" data-i18n-attr="aria-label:idxFilter"></div>
+        </div>
+        <p class="index-cols" aria-hidden="true"><span data-i18n="idxC1">data</span><span data-i18n="idxC2">projeto</span><span data-i18n="idxC3">tipo</span><span data-i18n="idxC4">links</span></p>
+        <ul class="index-list" id="idxList"></ul>
+        <button class="btn btn-line btn-sm index-more" type="button" id="idxMore" hidden><span id="idxMoreT"></span><svg aria-hidden="true"><use href="#i-down"/></svg></button>
+      </div>
     </div>
   </section>
+  <div class="peek" id="peek" aria-hidden="true"><img id="peekImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="640" height="400" decoding="async"></div>
 
   <!-- ================= STACK ================= -->
   <section class="section stack" id="stack" aria-labelledby="h-stack">
     <span class="bg-word" aria-hidden="true">Stack</span>
     <div class="wrap">
       <header class="sec-head">
-        <p class="label"><span class="num">03</span><span>Stack</span></p>
+        <p class="label"><span class="num">03</span><span class="slash" aria-hidden="true">/</span><span>Stack</span></p>
         <h2 id="h-stack" class="split" data-i18n="stackT">O que eu uso, com prova</h2>
         <p class="sec-lede" data-i18n="stackP">Cada área aponta para um projeto onde dá para abrir o código e conferir.</p>
       </header>
       <ul class="skills">
-        <li class="skill"><h3>Front-end</h3><p>HTML, CSS, JavaScript, TypeScript, React 19, Vite, Tailwind</p><a href="https://github.com/carlosserra-a11y/sao-cristovao-3.0" target="_blank" rel="noopener noreferrer"><span data-i18n="seeIn">Ver em</span> São Cristóvão 3.0<svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
-        <li class="skill"><h3>Back-end</h3><p data-i18n="sk2">Node.js, Express 5, SQLite, API REST, senhas com scrypt</p><a href="https://github.com/carlosserra-a11y/Figarus-2.0" target="_blank" rel="noopener noreferrer"><span data-i18n="seeIn">Ver em</span> Figaro's 2.0<svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
-        <li class="skill"><h3 data-i18n="sk3t">3D e animação</h3><p>three.js, WebGL, GLSL, GSAP, ScrollTrigger</p><a href="https://github.com/carlosserra-a11y/ingrid-market" target="_blank" rel="noopener noreferrer"><span data-i18n="seeIn">Ver em</span> Ingrid Lima<svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
-        <li class="skill"><h3 data-i18n="sk4t">IA aplicada</h3><p data-i18n="sk4">Gemini API (texto e voz), com resposta local quando não há chave</p><a href="https://github.com/carlosserra-a11y/smartech-3.0" target="_blank" rel="noopener noreferrer"><span data-i18n="seeIn">Ver em</span> Smartech 3.0<svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
-        <li class="skill"><h3 data-i18n="sk5t">Qualidade</h3><p data-i18n="sk5">node:test, acessibilidade, CSP, Lighthouse e verificação automática no GitHub Actions</p><a href="https://github.com/carlosserra-a11y/leadpagecarlos" target="_blank" rel="noopener noreferrer"><span data-i18n="seeIn">Ver em</span> <span data-i18n="thisSite">este site</span><svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
-        <li class="skill"><h3 data-i18n="sk6t">Ferramentas</h3><p>Git, GitHub, GitHub Pages, npm, esbuild</p><a href="https://github.com/carlosserra-a11y" target="_blank" rel="noopener noreferrer"><span data-i18n="seeAll">19 repositórios</span><svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
+        <li class="skill"><p class="skill-k" aria-hidden="true">~/front-end</p><h3>Front-end</h3><p>HTML, CSS, JavaScript, TypeScript, React 19, Vite, Tailwind</p><a href="https://github.com/carlosserra-a11y/sao-cristovao-3.0" target="_blank" rel="noopener noreferrer"><span data-i18n="seeIn">Ver em</span> São Cristóvão 3.0<svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
+        <li class="skill"><p class="skill-k" aria-hidden="true">~/back-end</p><h3>Back-end</h3><p data-i18n="sk2">Node.js, Express 5, SQLite, API REST, senhas com scrypt</p><a href="https://github.com/carlosserra-a11y/Figarus-2.0" target="_blank" rel="noopener noreferrer"><span data-i18n="seeIn">Ver em</span> Figaro's 2.0<svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
+        <li class="skill"><p class="skill-k" aria-hidden="true">~/3d</p><h3 data-i18n="sk3t">3D e animação</h3><p>three.js, WebGL, GLSL, GSAP, ScrollTrigger</p><a href="https://github.com/carlosserra-a11y/ingrid-market" target="_blank" rel="noopener noreferrer"><span data-i18n="seeIn">Ver em</span> Ingrid Lima<svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
+        <li class="skill"><p class="skill-k" aria-hidden="true">~/ia</p><h3 data-i18n="sk4t">IA aplicada</h3><p data-i18n="sk4">Gemini API (texto e voz), com resposta local quando não há chave</p><a href="https://github.com/carlosserra-a11y/smartech-3.0" target="_blank" rel="noopener noreferrer"><span data-i18n="seeIn">Ver em</span> Smartech 3.0<svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
+        <li class="skill"><p class="skill-k" aria-hidden="true">~/qualidade</p><h3 data-i18n="sk5t">Qualidade</h3><p data-i18n="sk5">node:test, acessibilidade, CSP, Lighthouse e verificação automática no GitHub Actions</p><a href="https://github.com/carlosserra-a11y/leadpagecarlos" target="_blank" rel="noopener noreferrer"><span data-i18n="seeIn">Ver em</span> <span data-i18n="thisSite">este site</span><svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
+        <li class="skill"><p class="skill-k" aria-hidden="true">~/ferramentas</p><h3 data-i18n="sk6t">Ferramentas</h3><p>Git, GitHub, GitHub Pages, npm, esbuild, Vite</p><a href="https://github.com/carlosserra-a11y" target="_blank" rel="noopener noreferrer"><span data-i18n="seeAll">19 repositórios</span><svg aria-hidden="true"><use href="#i-out"/></svg></a></li>
       </ul>
     </div>
   </section>
@@ -207,14 +289,16 @@
     <div class="wrap">
       <div class="about-in">
         <figure class="portrait">
+          <i class="hud-c tl" aria-hidden="true"></i><i class="hud-c tr" aria-hidden="true"></i><i class="hud-c bl" aria-hidden="true"></i><i class="hud-c br" aria-hidden="true"></i>
+          <span class="scan" aria-hidden="true"></span>
           <picture>
             <source type="image/avif" srcset="assets/foto/retrato-560.avif 560w, assets/foto/retrato-1024.avif 1024w" sizes="(max-width: 900px) 80vw, 440px">
-            <img src="assets/foto/retrato-560.webp" srcset="assets/foto/retrato-560.webp 560w, assets/foto/retrato-1024.webp 1024w" sizes="(max-width: 900px) 80vw, 440px" width="1024" height="1024" alt="Carlos Serra, de terno escuro e camisa clara" loading="lazy" decoding="async">
+            <img src="assets/foto/retrato-560.webp" srcset="assets/foto/retrato-560.webp 560w, assets/foto/retrato-1024.webp 1024w" sizes="(max-width: 900px) 80vw, 440px" width="1024" height="1024" alt="Carlos Serra, de terno escuro e camisa clara" data-i18n-attr="alt:portraitAlt" loading="lazy" decoding="async">
           </picture>
           <figcaption><b>Carlos Serra</b><span data-i18n="cap">ADS · FMP · Palhoça, SC</span></figcaption>
         </figure>
         <div class="about-copy">
-          <p class="label"><span class="num">04</span><span data-i18n="aboutK">Sobre</span></p>
+          <p class="label"><span class="num">04</span><span class="slash" aria-hidden="true">/</span><span data-i18n="aboutK">Sobre</span></p>
           <h2 id="h-about" class="split" data-i18n="aboutT">Aprendo construindo para clientes de verdade</h2>
           <p data-i18n="aboutP1">Estudo Análise e Desenvolvimento de Sistemas na FMP, em Palhoça. Comecei a programar em agosto de 2026 e, desde então, fiz sites e sistemas que 5 negócios da região usam: cardápio com pedido pelo WhatsApp, painel com login e banco de dados, vitrine em 3D.</p>
           <p data-i18n="aboutP2">Gosto de entender como o negócio funciona antes de abrir o editor. Quero entrar num time onde eu receba code review e cresça em front-end ou full stack.</p>
@@ -247,49 +331,194 @@
 
   <!-- ================= CONTATO ================= -->
   <section class="section contact" id="contato" aria-labelledby="h-cont">
-    <div class="wrap contact-in">
-      <div class="con-main">
-        <p class="label"><span class="num">05</span><span data-i18n="conK">Contato</span></p>
-        <h2 id="h-cont" class="con-title split" data-i18n="conT">Vamos conversar</h2>
-        <p class="sec-lede" data-i18n="conP">Estou disponível para estágio ou vaga júnior. O jeito mais rápido de falar comigo é pelo WhatsApp.</p>
-        <p class="big-mail"><a class="js-mail" href="mailto:carlosserraap55@gmail.com">carlosserraap55@gmail.com</a><button class="copy-mini lg" type="button" data-copy="email" aria-label="Copiar e-mail" data-i18n-attr="aria-label:copyEmail"><svg aria-hidden="true"><use href="#i-copy"/></svg></button></p>
-        <div class="con-acts">
-          <a class="btn btn-solid magnet js-wa" href="https://wa.me/5548996170281" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#i-wa"/></svg><span>WhatsApp · <span class="js-phone">(48) 99617-0281</span></span></a>
-          <a class="btn btn-line" href="https://github.com/carlosserra-a11y" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#i-gh"/></svg>GitHub</a>
-          <a class="btn btn-line" id="inBtn" href="#" target="_blank" rel="noopener noreferrer" hidden><svg aria-hidden="true"><use href="#i-in"/></svg>LinkedIn</a>
-        </div>
-      </div>
+    <div class="wrap">
+      <header class="con-head">
+        <p class="label"><span class="num">05</span><span class="slash" aria-hidden="true">/</span><span data-i18n="conK">Contato</span></p>
+        <h2 id="h-cont" class="con-title split" data-i18n="conT">Vamos construir algo?</h2>
+        <p class="sec-lede" data-i18n="conP">Estou disponível para estágio ou vaga júnior e também faço sites e sistemas para negócios. Escolha o canal ou monte a mensagem ao lado: ela vai pronta.</p>
+        <p class="con-meta">
+          <span class="chip-live"><span class="dot" aria-hidden="true"></span><span data-i18n="conAvail">Disponível agora</span></span>
+          <span class="js-only"><span data-i18n="conTime">Agora em Palhoça:</span> <b class="js-clock-short">--:--</b></span>
+          <span class="js-reply">Respondo em até 24 horas úteis</span>
+        </p>
+      </header>
 
-      <form class="cform" id="cform" novalidate>
-        <h3 data-i18n="fT">Ou deixe uma mensagem</h3>
-        <div class="field"><label for="fNome" data-i18n="fN">Nome</label><input id="fNome" name="nome" type="text" autocomplete="name" required aria-describedby="eNome"><p class="err" id="eNome"></p></div>
-        <div class="field"><label for="fEmail" data-i18n="fE">Seu e-mail</label><input id="fEmail" name="email" type="email" autocomplete="email" required aria-describedby="eEmail"><p class="err" id="eEmail"></p></div>
-        <div class="field full"><label for="fMsg" data-i18n="fM">Mensagem</label><textarea id="fMsg" name="mensagem" rows="4" required aria-describedby="eMsg"></textarea><p class="err" id="eMsg"></p></div>
-        <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <div class="field full form-foot"><button class="btn btn-line" type="submit" id="fSend"><span data-i18n="fS">Enviar mensagem</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button><p class="form-out" id="fOut" role="status"></p></div>
-      </form>
+      <div class="con-grid">
+        <ul class="channels">
+          <li class="ch ch-main">
+            <a class="ch-link js-wa" href="https://wa.me/5548996170281" target="_blank" rel="noopener noreferrer">
+              <span class="ch-ic"><svg aria-hidden="true"><use href="#i-wa"/></svg></span>
+              <span class="ch-txt"><span class="ch-k">WhatsApp</span><span class="ch-v js-phone">(48) 99617-0281</span><span class="ch-d" data-i18n="chWa">O jeito mais rápido · abre a conversa com uma mensagem pronta</span></span>
+              <svg class="ch-go" aria-hidden="true"><use href="#i-arrow"/></svg>
+            </a>
+          </li>
+          <li class="ch">
+            <a class="ch-link js-mail" href="mailto:carlosserraap55@gmail.com">
+              <span class="ch-ic"><svg aria-hidden="true"><use href="#i-mail"/></svg></span>
+              <span class="ch-txt"><span class="ch-k" data-i18n="email">E-mail</span><span class="ch-v">carlosserraap55@gmail.com</span></span>
+              <svg class="ch-go" aria-hidden="true"><use href="#i-arrow"/></svg>
+            </a>
+            <button class="copy-mini ch-copy" type="button" data-copy="email" aria-label="Copiar e-mail" data-i18n-attr="aria-label:copyEmail"><svg aria-hidden="true"><use href="#i-copy"/></svg></button>
+          </li>
+          <li class="ch">
+            <a class="ch-link" href="https://github.com/carlosserra-a11y" target="_blank" rel="noopener noreferrer">
+              <span class="ch-ic"><svg aria-hidden="true"><use href="#i-gh"/></svg></span>
+              <span class="ch-txt"><span class="ch-k">GitHub</span><span class="ch-v">@carlosserra-a11y</span></span>
+              <svg class="ch-go" aria-hidden="true"><use href="#i-out"/></svg>
+            </a>
+          </li>
+          <li class="ch" id="inCh" hidden>
+            <a class="ch-link" id="inBtn" href="#" target="_blank" rel="noopener noreferrer">
+              <span class="ch-ic"><svg aria-hidden="true"><use href="#i-in"/></svg></span>
+              <span class="ch-txt"><span class="ch-k">LinkedIn</span><span class="ch-v">Carlos Serra</span></span>
+              <svg class="ch-go" aria-hidden="true"><use href="#i-out"/></svg>
+            </a>
+          </li>
+          <li class="ch">
+            <button class="ch-link" type="button" data-vcard>
+              <span class="ch-ic"><svg aria-hidden="true"><use href="#i-user"/></svg></span>
+              <span class="ch-txt"><span class="ch-k" data-i18n="vcard">Salvar contato</span><span class="ch-v" data-i18n="chVcard">Arquivo .vcf para a agenda do celular</span></span>
+              <svg class="ch-go" aria-hidden="true"><use href="#i-down"/></svg>
+            </button>
+          </li>
+          <li class="ch ch-qr" aria-hidden="true">
+            <svg class="qr" viewBox="0 0 25 25" shape-rendering="crispEdges"><path stroke="currentColor" d="M0 0.5h7m2 0h1m4 0h2m2 0h7M0 1.5h1m5 0h1m1 0h1m4 0h1m4 0h1m5 0h1M0 2.5h1m1 0h3m1 0h1m2 0h1m3 0h4m1 0h1m1 0h3m1 0h1M0 3.5h1m1 0h3m1 0h1m2 0h4m1 0h1m3 0h1m1 0h3m1 0h1M0 4.5h1m1 0h3m1 0h1m1 0h1m1 0h3m1 0h3m1 0h1m1 0h3m1 0h1M0 5.5h1m5 0h1m4 0h1m2 0h2m2 0h1m5 0h1M0 6.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 7.5h1m6 0h1M0 8.5h1m1 0h1m1 0h1m1 0h1m5 0h1m1 0h1m5 0h1m2 0h1M3 9.5h1m5 0h1m2 0h3m2 0h2m5 0h1M1 10.5h1m1 0h2m1 0h1m1 0h2m2 0h1m1 0h1m1 0h1m1 0h2m2 0h3M4 11.5h1m2 0h7m1 0h1m7 0h1M1 12.5h3m2 0h1m3 0h2m1 0h1m4 0h2m1 0h1m1 0h2M1 13.5h2m2 0h1m1 0h3m1 0h1m1 0h3m1 0h2m2 0h1m2 0h1M0 14.5h1m1 0h1m1 0h4m1 0h2m3 0h1m2 0h1m1 0h1m2 0h3M1 15.5h1m8 0h2m1 0h1m2 0h3m1 0h1m2 0h1M0 16.5h1m1 0h3m1 0h1m3 0h1m1 0h1m2 0h7M8 17.5h6m1 0h2m3 0h2m1 0h2M0 18.5h7m4 0h2m1 0h3m1 0h1m1 0h2m1 0h2M0 19.5h1m5 0h1m2 0h2m1 0h2m1 0h2m3 0h2m1 0h2M0 20.5h1m1 0h3m1 0h1m1 0h2m1 0h1m2 0h1m1 0h6m1 0h1M0 21.5h1m1 0h3m1 0h1m3 0h2m7 0h5M0 22.5h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h1m1 0h2m3 0h1m3 0h1M0 23.5h1m5 0h1m3 0h2m3 0h2m1 0h1m1 0h2m1 0h1M0 24.5h7m1 0h1m3 0h1m2 0h5m3 0h2"/></svg>
+            <span class="ch-txt"><span class="ch-k" data-i18n="qrK">Do computador para o celular</span><span class="ch-d" data-i18n="qrD">Aponte a câmera para abrir o WhatsApp</span></span>
+          </li>
+        </ul>
+
+        <!-- formulário que monta a mensagem e envia pelo WhatsApp ou pelo e-mail -->
+        <form class="brief" id="cform" novalidate>
+          <div class="brief-head">
+            <h3 data-i18n="fT">Monte sua mensagem</h3>
+            <p class="brief-step" aria-hidden="true">carlos@serra:~$ <span data-i18n="fStep">nova-mensagem</span></p>
+          </div>
+          <fieldset class="chips" id="fAbout">
+            <legend data-i18n="fAbout">Sobre o quê?</legend>
+            <label class="chip"><input type="radio" name="assunto" value="vaga" checked><span data-i18n="fA1">Vaga ou estágio</span></label>
+            <label class="chip"><input type="radio" name="assunto" value="projeto"><span data-i18n="fA2">Site ou sistema</span></label>
+            <label class="chip"><input type="radio" name="assunto" value="outro"><span data-i18n="fA3">Outro assunto</span></label>
+          </fieldset>
+          <div class="brief-proj" id="fProj" hidden>
+            <fieldset class="chips">
+              <legend data-i18n="fType">Tipo de projeto</legend>
+              <label class="chip"><input type="radio" name="tipo" value="landing"><span data-i18n="fT1">Landing page</span></label>
+              <label class="chip"><input type="radio" name="tipo" value="site"><span data-i18n="fT2">Site institucional</span></label>
+              <label class="chip"><input type="radio" name="tipo" value="loja"><span data-i18n="fT3">Loja ou catálogo</span></label>
+              <label class="chip"><input type="radio" name="tipo" value="sistema"><span data-i18n="fT4">Sistema com painel</span></label>
+            </fieldset>
+            <fieldset class="chips">
+              <legend data-i18n="fWhen">Prazo</legend>
+              <label class="chip"><input type="radio" name="prazo" value="calma"><span data-i18n="fW1">Sem pressa</span></label>
+              <label class="chip"><input type="radio" name="prazo" value="mes"><span data-i18n="fW2">Este mês</span></label>
+              <label class="chip"><input type="radio" name="prazo" value="urgente"><span data-i18n="fW3">Urgente</span></label>
+            </fieldset>
+            <fieldset class="chips">
+              <legend data-i18n="fBudget">Orçamento (opcional)</legend>
+              <label class="chip"><input type="radio" name="orcamento" value="1"><span data-i18n="fB1">até R$ 1 mil</span></label>
+              <label class="chip"><input type="radio" name="orcamento" value="2"><span data-i18n="fB2">R$ 1 a 3 mil</span></label>
+              <label class="chip"><input type="radio" name="orcamento" value="3"><span data-i18n="fB3">acima de R$ 3 mil</span></label>
+              <label class="chip"><input type="radio" name="orcamento" value="0"><span data-i18n="fB4">a combinar</span></label>
+            </fieldset>
+          </div>
+          <div class="brief-fields">
+            <div class="field"><label for="fNome" data-i18n="fN">Seu nome</label><input id="fNome" name="nome" type="text" autocomplete="name" required aria-describedby="eNome"><p class="err" id="eNome"></p></div>
+            <div class="field"><label for="fOrg" data-i18n="fO">Empresa (opcional)</label><input id="fOrg" name="empresa" type="text" autocomplete="organization"></div>
+            <div class="field full"><label for="fEmail" data-i18n="fE">Seu e-mail (opcional)</label><input id="fEmail" name="email" type="email" autocomplete="email" aria-describedby="eEmail"><p class="err" id="eEmail"></p></div>
+            <div class="field full"><label for="fMsg" data-i18n="fM">Mensagem</label><textarea id="fMsg" name="mensagem" rows="4" maxlength="1500" required aria-describedby="eMsg fHint" data-lenis-prevent></textarea><p class="err" id="eMsg"></p><p class="hint" id="fHint" data-i18n="fHint">Conte em poucas linhas: a vaga, o negócio ou a ideia.</p></div>
+          </div>
+          <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="preview" aria-hidden="true">
+            <p class="preview-k" data-i18n="fPrev">Prévia da mensagem</p>
+            <p class="bubble" id="fPreview" data-lenis-prevent></p>
+          </div>
+          <div class="form-foot">
+            <button class="btn btn-solid" type="submit" value="wa" id="fSendWa"><svg aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="fSWa">Enviar pelo WhatsApp</span></button>
+            <button class="btn btn-line" type="submit" value="mail" id="fSendMail"><svg aria-hidden="true"><use href="#i-send"/></svg><span data-i18n="fSMail">Enviar por e-mail</span></button>
+            <p class="form-out" id="fOut" role="status"></p>
+          </div>
+        </form>
+      </div>
     </div>
   </section>
 </main>
 
+<!-- ================= RODAPÉ ================= -->
 <footer class="foot">
-  <div class="wrap foot-in">
-    <p class="foot-sig"><span class="mark" aria-hidden="true">cs</span><span data-i18n="foot1">Carlos Serra · desenvolvedor full stack júnior</span></p>
-    <p class="foot-links">
-      <a href="https://github.com/carlosserra-a11y" target="_blank" rel="noopener noreferrer">GitHub</a>
-      <a class="js-wa" href="https://wa.me/5548996170281" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-      <a class="js-mail" href="mailto:carlosserraap55@gmail.com">E-mail</a>
-      <a href="https://github.com/carlosserra-a11y/leadpagecarlos" target="_blank" rel="noopener noreferrer" data-i18n="footCode">Código deste site</a>
-    </p>
-    <p class="foot-small"><span data-i18n="foot2">© 2026 · feito à mão com HTML, CSS, JavaScript e three.js</span><a href="#inicio" data-i18n="toTop">Voltar ao topo ↑</a></p>
+  <div class="wrap">
+    <div class="foot-cta">
+      <p class="foot-q" data-i18n="footQ">Tem uma vaga ou um projeto?</p>
+      <a class="foot-go magnet" href="#contato"><span data-i18n="footGo">Vamos conversar</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="foot-cols">
+      <div class="foot-col">
+        <h2 class="foot-h" data-i18n="footNav">Navegação</h2>
+        <ul>
+          <li><a href="#inicio" data-scramble data-i18n="footHome">Início</a></li>
+          <li><a href="#projetos" data-scramble data-i18n="nav1">Projetos</a></li>
+          <li><a href="#outros" data-scramble data-i18n="footIdx">Arquivo</a></li>
+          <li><a href="#stack" data-scramble>Stack</a></li>
+          <li><a href="#sobre" data-scramble data-i18n="nav3">Sobre</a></li>
+          <li><a href="#contato" data-scramble data-i18n="nav4">Contato</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2 class="foot-h" data-i18n="footCon">Contato</h2>
+        <ul>
+          <li><a class="js-wa" href="https://wa.me/5548996170281" target="_blank" rel="noopener noreferrer" data-scramble>WhatsApp</a></li>
+          <li><a class="js-mail" href="mailto:carlosserraap55@gmail.com" data-scramble data-i18n="email">E-mail</a></li>
+          <li><a href="https://github.com/carlosserra-a11y" target="_blank" rel="noopener noreferrer" data-scramble>GitHub</a></li>
+          <li id="inFoot" hidden><a id="inFootA" href="#" target="_blank" rel="noopener noreferrer" data-scramble>LinkedIn</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2 class="foot-h" data-i18n="footProj">Projetos no ar</h2>
+        <ul>
+          <li><a href="https://carlosserra-a11y.github.io/Figarus-2.0/" target="_blank" rel="noopener noreferrer" data-scramble>Figaro's 2.0</a></li>
+          <li><a href="https://carlosserra-a11y.github.io/sao-cristovao-3.0/" target="_blank" rel="noopener noreferrer" data-scramble>São Cristóvão 3.0</a></li>
+          <li><a href="https://carlosserra-a11y.github.io/smartech-3.0/" target="_blank" rel="noopener noreferrer" data-scramble>Smartech 3.0</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h2 class="foot-h">Status</h2>
+        <ul class="foot-status">
+          <li><span class="dot" aria-hidden="true"></span><span data-i18n="footAvail">Disponível para estágio e júnior</span></li>
+          <li class="js-only">Palhoça · <b class="js-clock">--:--:--</b> BRT</li>
+          <li>v8.0 · <span data-i18n="footUpd">outubro de 2026</span></li>
+          <li><a href="https://github.com/carlosserra-a11y/leadpagecarlos" target="_blank" rel="noopener noreferrer" data-scramble data-i18n="footCode">Código deste site</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="foot-term" aria-hidden="true"><span class="ld-prompt">carlos@serra:~$</span> echo "<span data-i18n="footBye">obrigado pela visita</span>"<i class="caret"></i></p>
+  </div>
+  <p class="foot-mark" id="footMark" aria-hidden="true">carlos<b>@</b>serra</p>
+  <div class="wrap foot-bottom">
+    <p data-i18n="foot2">© 2026 Carlos Serra · feito à mão com HTML, CSS, JavaScript, React e three.js</p>
+    <a class="to-top" href="#inicio"><span data-i18n="toTop">Voltar ao topo</span><svg aria-hidden="true"><use href="#i-up"/></svg></a>
   </div>
 </footer>
 
+<!-- atalhos (Ctrl K / ⌘K): ir para seções, copiar e-mail, abrir WhatsApp, trocar idioma -->
+<dialog class="cmd" id="cmd" aria-labelledby="cmdTitle">
+  <div class="cmd-box">
+    <h2 class="sr-only" id="cmdTitle" data-i18n="cmdTitle">Atalhos</h2>
+    <div class="cmd-in">
+      <svg aria-hidden="true"><use href="#i-search"/></svg>
+      <input id="cmdInput" type="text" role="combobox" aria-expanded="true" aria-controls="cmdList" aria-autocomplete="list" autocomplete="off" spellcheck="false" placeholder="Digite um comando…" data-i18n-attr="placeholder:cmdPh;aria-label:cmdPh" aria-label="Digite um comando…">
+      <kbd>Esc</kbd>
+    </div>
+    <!-- [html-validate-disable-next prefer-native-element: lista de comandos que filtra enquanto digita (padrão combobox da WAI-ARIA)] -->
+    <div class="cmd-list" id="cmdList" data-lenis-prevent role="listbox" aria-label="Comandos" data-i18n-attr="aria-label:cmdList"></div>
+    <p class="cmd-empty" id="cmdEmpty" role="status"></p>
+    <p class="cmd-foot" aria-hidden="true"><span><kbd>↑</kbd><kbd>↓</kbd> <span data-i18n="cmdMove">navegar</span></span><span><kbd>Enter</kbd> <span data-i18n="cmdRun">executar</span></span></p>
+  </div>
+</dialog>
+
 <nav class="dock" id="dock" aria-label="Contato rápido" data-i18n-attr="aria-label:dockLabel">
   <a class="btn btn-solid js-wa" href="https://wa.me/5548996170281" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp</a>
-  <a class="btn btn-ghost" href="https://github.com/carlosserra-a11y" target="_blank" rel="noopener noreferrer"><svg aria-hidden="true"><use href="#i-gh"/></svg>GitHub</a>
+  <a class="btn btn-ghost" href="#contato"><svg aria-hidden="true"><use href="#i-send"/></svg><span data-i18n="nav4">Contato</span></a>
 </nav>
-<div class="cursor-tag" id="cursorTag" aria-hidden="true"><span data-i18n="openSite">Abrir site</span> ↗</div>
+<div class="cursor" id="cursor" aria-hidden="true"><span class="cursor-tag" id="cursorTag"><span data-i18n="openSite">Abrir site</span> ↗</span></div>
 <p class="toast" id="toast" role="status" aria-live="polite"></p>
 
 <script src="js/dados.js" defer></script>

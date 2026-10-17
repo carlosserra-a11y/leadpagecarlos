@@ -1,17 +1,21 @@
 {
   "name": "leadpagecarlos-ferramentas",
   "private": true,
-  "description": "Ferramentas do portfólio: monta a vitrine 3D (three.js + esbuild), gera o pôster dela e atualiza fontes e hashes da CSP.",
+  "description": "Ferramentas do portfólio: monta a vitrine 3D (three.js + esbuild), gera o pôster dela, os ícones da marca, a imagem de compartilhamento e o QR code, e atualiza fontes e hashes da CSP.",
   "type": "module",
   "scripts": {
     "vitrine": "node build-vitrine.mjs",
     "poster": "node poster.mjs",
+    "marca": "node marca.mjs",
+    "og": "node og.mjs",
+    "qr": "node qr.mjs",
     "cabecalho": "node cabecalho.mjs"
   },
   "dependencies": {
     "esbuild": "0.24.0",
-    "three": "0.169.0",
+    "playwright": "1.56.1",
+    "qrcode": "1.5.4",
     "sharp": "0.34.4",
-    "playwright": "1.56.1"
+    "three": "0.169.0"
   }
 }

@@ -1,6 +1,7 @@
 /* Vitrine 3D (three.js): um notebook e um celular modelados só com código, mostrando os projetos.
    - Notebook com teclado (teclas instanciadas), trackpad, dobradiça e tampa que abre na entrada.
-   - A tela mostra a captura da página inteira do projeto e rola por ela; a troca de projeto é um crossfade.
+   - A tela mostra a captura da página inteira do projeto e rola por ela; a troca de projeto é um "glitch"
+     rápido (linhas deslocadas e cores separadas) que termina num crossfade.
    - Celular ao lado com a versão mobile do mesmo projeto.
    - Segue o mouse de leve, flutua parado e muda de ângulo com a rolagem (topo → projetos).
    Empacotado por ferramentas/build-vitrine.mjs em lib/vitrine3d.min.js (script clássico, global Vitrine3D). */
@@ -22,16 +23,26 @@ function screenMaterial() {
     uniforms: {
       tA: { value: null }, tB: { value: null },
       rA: { value: [0, 1] }, rB: { value: [0, 1] },   // [offset, repeat] no eixo vertical
-      uMix: { value: 0 }, uBright: { value: 1 }
+      uMix: { value: 0 }, uBright: { value: 1 }, uTime: { value: 0 }
     },
     vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }",
     fragmentShader: `
-      uniform sampler2D tA; uniform sampler2D tB; uniform vec2 rA; uniform vec2 rB; uniform float uMix; uniform float uBright;
+      uniform sampler2D tA; uniform sampler2D tB; uniform vec2 rA; uniform vec2 rB; uniform float uMix; uniform float uBright; uniform float uTime;
       varying vec2 vUv;
+      float h(float n){ return fract(sin(n) * 43758.5453); }
       void main(){
-        vec3 a = texture2D(tA, vec2(vUv.x, rA.x + vUv.y * rA.y)).rgb;
-        vec3 b = texture2D(tB, vec2(vUv.x, rB.x + vUv.y * rB.y)).rgb;
-        gl_FragColor = vec4(mix(a, b, uMix) * uBright, 1.0);
+        // durante a troca: faixas horizontais deslocadas e canais de cor separados (pico no meio da troca)
+        float g = sin(uMix * 3.14159);
+        float band = floor(vUv.y * 38.0 + floor(uTime * 24.0) * 7.0);
+        float dx = (h(band) - 0.5) * 0.09 * g * step(0.55, h(band + 3.1));
+        vec2 uv = vec2(clamp(vUv.x + dx, 0.0, 1.0), vUv.y);
+        float ca = 0.012 * g;
+        vec2 ya = vec2(rA.x + uv.y * rA.y), yb = vec2(rB.x + uv.y * rB.y);
+        vec3 a = vec3(texture2D(tA, vec2(uv.x + ca, ya.x)).r, texture2D(tA, vec2(uv.x, ya.x)).g, texture2D(tA, vec2(uv.x - ca, ya.x)).b);
+        vec3 b = vec3(texture2D(tB, vec2(uv.x + ca, yb.x)).r, texture2D(tB, vec2(uv.x, yb.x)).g, texture2D(tB, vec2(uv.x - ca, yb.x)).b);
+        vec3 c = mix(a, b, smoothstep(0.25, 0.75, uMix));
+        c += vec3(0.18, 0.3, 0.9) * g * 0.12 * step(0.985, h(band * 1.7));   // um ou outro risco azul
+        gl_FragColor = vec4(c * uBright, 1.0);
         #include <colorspace_fragment>
       }`,
     toneMapped: false
@@ -45,12 +56,15 @@ function shadowTexture() {                            // sombra de contato: um d
   g.fillStyle = r; g.fillRect(0, 0, 256, 256);
   return new CanvasTexture(c);
 }
-function logoTexture() {                              // monograma na tampa
+function logoTexture() {                              // a marca carlos@serra na tampa: hexágono aberto e o prompt >_
   const c = document.createElement("canvas"); c.width = c.height = 256;
   const g = c.getContext("2d");
   g.fillStyle = "#000"; g.fillRect(0, 0, 256, 256);
-  g.fillStyle = "#fff"; g.font = "600 120px Geist, Arial, sans-serif"; g.textAlign = "center"; g.textBaseline = "middle";
-  g.fillText("cs", 128, 136);
+  g.scale(256 / 48, 256 / 48);
+  g.strokeStyle = g.fillStyle = "#fff"; g.lineWidth = 3; g.lineCap = g.lineJoin = "round";
+  g.stroke(new Path2D("M39 11.65 24 3 5.81 13.5v21L24 45l15-8.65"));
+  g.stroke(new Path2D("m16 18.5 7 5.5-7 5.5"));
+  g.fillRect(25.5, 28, 9, 3);
   return new CanvasTexture(c);
 }
 
@@ -197,10 +211,12 @@ export function mountVitrine(canvas, opts = {}) {
     S.cur = sc;
     setWin("rB", scr.uniforms.tB.value, sc); setWin("rA", scr.uniforms.tA.value, S.scrollA);
     scr.uniforms.uMix.value = pScr.uniforms.uMix.value = S.mix;
+    scr.uniforms.uTime.value = pScr.uniforms.uTime.value = t;
     renderer.render(scene, camera);
   }
   function frame(now) {
     S.raf = 0;
+    if (!S.visible && !still) return;                   // escondida (o cristal 3D está no topo): não desenha nada
     S.skip = !S.skip;                                   // parado há 3 s: 30 quadros por segundo bastam
     if (!(now - S.last > 3000 && !S.fading && S.open >= 1 && S.skip)) draw(now);
     if (!still && S.visible && !document.hidden) S.raf = requestAnimationFrame(frame);
@@ -217,8 +233,13 @@ export function mountVitrine(canvas, opts = {}) {
     project(i) { if (i === S.target && S.project === i) return; S.target = i; show(i); touch(); },
     scroll(p) { S.scroll = Math.max(0, Math.min(1, p)); touch(); },
     mode(p) { S.mode = Math.max(0, Math.min(1, p)); touch(); },
-    pointer(nx, ny) { if (still) return; S.tx = nx; S.ty = ny; touch(); },
-    visible(on) { S.visible = on; if (on) kick(); },
+    pointer(nx, ny) { if (still) return; S.tx = nx; S.ty = ny; if (S.visible) touch(); },
+    visible(on) {
+      // reaparece depois de um tempo escondida (ex.: o topo é o cristal 3D): a tampa abre de novo
+      if (on && !S.visible && !still && performance.now() - (S.hiddenAt || 0) > 4000) S.t0 = performance.now();
+      if (!on && S.visible) S.hiddenAt = performance.now();
+      S.visible = on; if (on) kick();
+    },
     dispose() { cancelAnimationFrame(S.raf); ro.disconnect(); document.removeEventListener("visibilitychange", onVis); renderer.dispose(); }
   };
 }

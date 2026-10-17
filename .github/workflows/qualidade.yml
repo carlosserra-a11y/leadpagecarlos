@@ -21,6 +21,7 @@ jobs:
         with:
           node-version: 22
       - run: npx -y html-validate@9.4.1 index.html 404.html
+      - run: node ferramentas/cabecalho.mjs --verificar
 
   links:
     # o 404.html usa caminhos a partir da raiz do Pages (/leadpagecarlos/...), por isso a raiz é a pasta acima do repositório
