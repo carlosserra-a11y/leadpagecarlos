@@ -8,7 +8,8 @@ var CONFIG = {
   repoDoSite: "leadpagecarlos", // repositório deste portfólio: não aparece como "NOVO" no arquivo
   email: "",            // ex.: "seuemail@gmail.com"   → botão "Copiar e-mail" e envio do formulário por e-mail
   linkedin: "",         // ex.: "https://www.linkedin.com/in/seu-perfil"
-  whatsapp: "",         // só números com DDI e DDD, ex.: "5548999999999"
+  whatsapp: "5548996170281", // só números com DDI e DDD → botões "WhatsApp", barra fixa no celular e "Salvar contato"
+  telefone: "(48) 99617-0281", // como o número aparece escrito no site
   curriculo: "",        // link do PDF do currículo → botão "Currículo" na barra e no contato
   foto: "",             // ex.: "assets/foto.jpg" → entra na ficha no lugar do "CS"
   formspree: "",        // código do formulário do formspree.io, ex.: "xyzabcd" → formulário envia direto
@@ -137,7 +138,9 @@ var SKILL_PROJECTS = [
 var EN = {
   docTitle:"Carlos Serra · Junior Full Stack Developer",
   docDesc:"Carlos Serra, junior full stack developer in Palhoça, Brazil. Sites and systems with React, TypeScript, Node.js, SQLite, three.js and AI (Gemini). 19 public projects on GitHub.",
-  skip:"Skip to content", navLabel:"Sections", langLabel:"PT · Ler em português", cmdLabel:"Open command palette (Ctrl K)", menu:"Menu", cv:"Résumé",
+  skip:"Skip to content", ghLabel:"Carlos Serra on GitHub (opens in a new tab)", waLabel:"Carlos Serra on WhatsApp",
+  ctaWa:"Message on WhatsApp", heroPhone:"WhatsApp and phone", vcard:"Save contact", phoneK:"WhatsApp · tap to chat",
+  refK:"Visual references", refT:"The aesthetic behind this site", footNav:"Contact", dockLabel:"Quick contact", dockWa:"WhatsApp", navLabel:"Sections", langLabel:"PT · Ler em português", cmdLabel:"Open command palette (Ctrl K)", menu:"Menu", cv:"Résumé",
   nav1:"Summary", nav2:"Highlights", nav3:"Projects", nav4:"Journey", nav5:"Skills", nav6:"Contact", nav7:"Method", nav8:"Education",
   status:"Available for an internship or junior role", role:"Junior Full Stack Developer · Palhoça, Brazil",
   lede:"I build sites and systems for real businesses: menus that take orders, <em>dashboards backed by a database</em>, 3D showrooms and AI assistants.",
@@ -166,9 +169,9 @@ var EN = {
   t8d:"Oct 11, 2026", t8t:"TypeScript, React 19 and AI ordering", t8p:"São Cristóvão 3.0: an assistant that builds the order, cookie notice (LGPD), security headers and 10 test files.",
   t9d:"Oct 16, 2026", t9t:"WebGL shader from scratch", t9p:"Ingrid Lima: a realistic eye drawn only with a shader that follows the mouse, blinks and guides the scroll. No images.",
   arsK:"Skills with proof", arsT:"Technical arsenal", arsP:"No made-up percentage bars. Every skill points to the project where it shows up.",
-  a1h:"Front-end", a1:"<dt>Semantic HTML and modern CSS</dt><dd>Grid, design tokens, light and dark themes. Seen in <a href=\"https://github.com/carlosserra-a11y/smartech-3.0\" target=\"_blank\" rel=\"noopener\">Smartech 3.0</a></dd><dt>React 19 + TypeScript + Vite</dt><dd>Components, cart state, tabs. Seen in <a href=\"https://github.com/carlosserra-a11y/sao-cristovao-3.0\" target=\"_blank\" rel=\"noopener\">São Cristóvão 3.0</a></dd><dt>Tailwind CSS</dt><dd>Seen in <a href=\"https://github.com/carlosserra-a11y/csiphone\" target=\"_blank\" rel=\"noopener\">CS Store</a> and São Cristóvão</dd>",
-  a2h:"Back-end", a2:"<dt>Node.js + Express 5</dt><dd>REST API, compression, static files. Seen in <a href=\"https://github.com/carlosserra-a11y/Figarus-2.0\" target=\"_blank\" rel=\"noopener\">Figaro's 2.0</a></dd><dt>SQLite</dt><dd>Order history and menu change log</dd><dt>Authentication</dt><dd>scrypt passwords and a first-access code for the admin dashboard</dd>",
-  a3h:"3D and animation", a3:"<dt>three.js and WebGL</dt><dd>Models built in code, Fresnel X-ray, an eye shader. Seen in <a href=\"https://github.com/carlosserra-a11y/ingrid-market\" target=\"_blank\" rel=\"noopener\">Ingrid Lima</a></dd><dt>GSAP + ScrollTrigger, Lenis</dt><dd>Scroll-driven animation, pinned sections</dd><dt>Performance</dt><dd>Single animation loop, pausing off-screen, automatic 2D fallback</dd>",
+  a1h:"Front-end", a1:"<dt>Semantic HTML and modern CSS</dt><dd>Grid, design tokens, light and dark themes. Seen in <a href=\"https://github.com/carlosserra-a11y/smartech-3.0\" target=\"_blank\" rel=\"noopener noreferrer\">Smartech 3.0</a></dd><dt>React 19 + TypeScript + Vite</dt><dd>Components, cart state, tabs. Seen in <a href=\"https://github.com/carlosserra-a11y/sao-cristovao-3.0\" target=\"_blank\" rel=\"noopener noreferrer\">São Cristóvão 3.0</a></dd><dt>Tailwind CSS</dt><dd>Seen in <a href=\"https://github.com/carlosserra-a11y/csiphone\" target=\"_blank\" rel=\"noopener noreferrer\">CS Store</a> and São Cristóvão</dd>",
+  a2h:"Back-end", a2:"<dt>Node.js + Express 5</dt><dd>REST API, compression, static files. Seen in <a href=\"https://github.com/carlosserra-a11y/Figarus-2.0\" target=\"_blank\" rel=\"noopener noreferrer\">Figaro's 2.0</a></dd><dt>SQLite</dt><dd>Order history and menu change log</dd><dt>Authentication</dt><dd>scrypt passwords and a first-access code for the admin dashboard</dd>",
+  a3h:"3D and animation", a3:"<dt>three.js and WebGL</dt><dd>Models built in code, Fresnel X-ray, an eye shader. Seen in <a href=\"https://github.com/carlosserra-a11y/ingrid-market\" target=\"_blank\" rel=\"noopener noreferrer\">Ingrid Lima</a></dd><dt>GSAP + ScrollTrigger, Lenis</dt><dd>Scroll-driven animation, pinned sections</dd><dt>Performance</dt><dd>Single animation loop, pausing off-screen, automatic 2D fallback</dd>",
   a4h:"Artificial intelligence", a4:"<dt>Google Gemini API</dt><dd>An assistant that builds orders and a technical consultant with Google Search</dd><dt>Gemini TTS</dt><dd>Audio guide with the browser's voice as a fallback</dd><dt>Plan B without AI</dt><dd>Without an API key, the site answers from a local knowledge base</dd>",
   a5h:"Quality and security", a5:"<dt>Automated tests</dt><dd>15 test files with <code>node:test</code>: prices, orders, opening hours, consent</dd><dt>LGPD and headers</dt><dd>Cookie notice, CSP, validation of external links</dd><dt>Accessibility</dt><dd>Keyboard navigation, “reduce motion”, AA contrast</dd>",
   a6h:"Tools", a6:"<dt>Git and GitHub</dt><dd>19 repositories, continuous publishing on GitHub Pages</dd><dt>esbuild, Vite and npm</dt><dd>Bundling the 3D code, React and libraries</dd><dt>AI in the workflow</dt><dd>I use coding assistants with review and tests before shipping</dd>",
@@ -184,7 +187,7 @@ var EN = {
   fT:"Send a message", fN:"Name", fE:"Email", fM:"Message", fS:"Send message",
   cCity:"City", cFmt:"Work format", cFmtV:"On-site, hybrid or remote",
   foot1:"© 2026 Carlos Serra · Hand-built with HTML, CSS and JavaScript",
-  foot2:"Theme inspired by <i>Bleach: Thousand-Year Blood War</i> · original fan art drawn in code, not affiliated with the rights holders.",
+  foot2:"Theme inspired by <i>Bleach: Thousand-Year Blood War</i>. Swords, butterflies and scenery drawn in code. Reference images © Tite Kubo/Shueisha, TV TOKYO, dentsu, Pierrot; non-commercial fan art, not affiliated with the rights holders.",
   footCmd:"commands", footSearch:"search",
   palLabel:"Command palette", palPh:"What do you want to do?", palCmds:"Commands", palFoot:"↑ ↓ to choose · Enter to run"
 };
@@ -199,6 +202,8 @@ var UI = {
     empty:q => `Nenhum projeto para “${q}”. Tente react, 3D ou pizza.`, results:n => `${n} ${n === 1 ? "projeto" : "projetos"} na lista`,
     apiNote:n => `Atualizado agora pela API do GitHub (+${n}).`, newDesc:"Projeto novo no GitHub.",
     liveOf:t => `Ver ${t} ao vivo`, codeOf:t => `Código de ${t} no GitHub`,
+    waMsg:"Olá, Carlos! Vi seu portfólio e quero conversar sobre uma oportunidade.", copyPhone:"Copiar telefone", phoneCopied:x => `Telefone copiado: ${x}`,
+    vcardDone:"Contato salvo. Abra o arquivo para adicionar à agenda.", bankaiOn:"卍解 · Bankai ativado", bankaiOff:"Bankai desativado",
     copyEmail:"Copiar e-mail", copied:x => `Copiado: ${x}`, copyFail:x => `Selecione e copie: ${x}`, briefCopied:"Resumo copiado. É só colar no e-mail ou no ATS.",
     cvPdf:"Currículo em PDF", email:"E-mail",
     smUses:(s, list) => list.length ? `${s}: ${list.join(", ")}` : `${s}: nenhum projeto em destaque`, smProj:(p, list) => `${p}: ${list.join(", ")}`,
@@ -206,7 +211,7 @@ var UI = {
     sending:"Enviando…", sent:"Mensagem enviada. Obrigado! Respondo pelo e-mail que você informou.", sendFail:"Não foi possível enviar agora. Tente de novo ou use o e-mail ao lado.",
     mailOpened:"Abrimos o seu aplicativo de e-mail com a mensagem pronta.", fixErrors:"Corrija os campos destacados.",
     langBtn:"EN",
-    pal:{ go:"Ir para", open:"Abrir caso", copy:"Copiar e-mail", bankai:"Alternar modo Bankai", lang:"Read in English", gh:"Abrir GitHub", search:"Buscar no arquivo", brief:"Copiar resumo para recrutador", cv:"Abrir currículo", none:"Nenhum comando encontrado", sec:"Seção", act:"Ação", case:"Caso" },
+    pal:{ wa:"Falar no WhatsApp", phone:"Copiar telefone", vcard:"Salvar contato (vCard)", go:"Ir para", open:"Abrir caso", copy:"Copiar e-mail", bankai:"Alternar modo Bankai", lang:"Read in English", gh:"Abrir GitHub", search:"Buscar no arquivo", brief:"Copiar resumo para recrutador", cv:"Abrir currículo", none:"Nenhum comando encontrado", sec:"Seção", act:"Ação", case:"Caso" },
     brief:(url, extra) => `Carlos Serra · Desenvolvedor Full Stack Júnior · Palhoça/SC · 24 anos
 Disponível para estágio ou vaga júnior (presencial, híbrido ou remoto).
 Formação: Análise e Desenvolvimento de Sistemas, FMP (Faculdade Municipal de Palhoça), 2ª fase.
@@ -224,6 +229,8 @@ GitHub: https://github.com/carlosserra-a11y${extra}`
     empty:q => `No projects for “${q}”. Try react, 3D or pizza.`, results:n => `${n} ${n === 1 ? "project" : "projects"} listed`,
     apiNote:n => `Just updated from the GitHub API (+${n}).`, newDesc:"New project on GitHub.",
     liveOf:t => `See ${t} live`, codeOf:t => `${t} source code on GitHub`,
+    waMsg:"Hi Carlos! I saw your portfolio and would like to talk about an opportunity.", copyPhone:"Copy phone number", phoneCopied:x => `Phone copied: ${x}`,
+    vcardDone:"Contact saved. Open the file to add it to your contacts.", bankaiOn:"卍解 · Bankai on", bankaiOff:"Bankai off",
     copyEmail:"Copy email", copied:x => `Copied: ${x}`, copyFail:x => `Select and copy: ${x}`, briefCopied:"Summary copied. Paste it into an email or your ATS.",
     cvPdf:"Résumé (PDF)", email:"Email",
     smUses:(s, list) => list.length ? `${s}: ${list.join(", ")}` : `${s}: no featured project`, smProj:(p, list) => `${p}: ${list.join(", ")}`,
@@ -231,7 +238,7 @@ GitHub: https://github.com/carlosserra-a11y${extra}`
     sending:"Sending…", sent:"Message sent. Thank you! I'll reply to the email you provided.", sendFail:"Couldn't send right now. Try again or use the email next to it.",
     mailOpened:"Your email app was opened with the message ready.", fixErrors:"Please fix the highlighted fields.",
     langBtn:"PT",
-    pal:{ go:"Go to", open:"Open case", copy:"Copy email", bankai:"Toggle Bankai mode", lang:"Ler em português", gh:"Open GitHub", search:"Search the archive", brief:"Copy recruiter summary", cv:"Open résumé", none:"No matching command", sec:"Section", act:"Action", case:"Case" },
+    pal:{ wa:"Message on WhatsApp", phone:"Copy phone number", vcard:"Save contact (vCard)", go:"Go to", open:"Open case", copy:"Copy email", bankai:"Toggle Bankai mode", lang:"Ler em português", gh:"Open GitHub", search:"Search the archive", brief:"Copy recruiter summary", cv:"Open résumé", none:"No matching command", sec:"Section", act:"Action", case:"Case" },
     brief:(url, extra) => `Carlos Serra · Junior Full Stack Developer · Palhoça, Brazil · 24 years old
 Available for an internship or junior role (on-site, hybrid or remote).
 Education: Systems Analysis and Development (ADS), FMP – Faculdade Municipal de Palhoça, 2nd term.

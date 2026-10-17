@@ -1,4 +1,4 @@
-# 斬 Portfólio · Carlos Serra · versão 3.0
+# 斬 Portfólio · Carlos Serra · versão 4.0
 
 Landing page de portfólio do Carlos Serra, desenvolvedor full stack júnior em Palhoça/SC (ADS · FMP · 2ª fase).
 Tema inspirado em *Bleach: Thousand-Year Blood War* (fan art, sem vínculo com os detentores dos direitos).
@@ -7,6 +7,33 @@ Tema inspirado em *Bleach: Thousand-Year Blood War* (fan art, sem vínculo com o
 **Código:** https://github.com/carlosserra-a11y/leadpagecarlos
 
 Não precisa instalar nada: dá dois cliques no `index.html` e abre.
+
+## Novidades da versão 4.0
+
+- **Contato em destaque:** WhatsApp **(48) 99617-0281** no hero, na ficha, no cartão de contato, no rodapé, na barra e na paleta de comandos,
+  sempre com mensagem pronta. No celular, uma **barra fixa com WhatsApp e GitHub** aparece depois do hero. Botão **Salvar contato** (vCard).
+- **GitHub em destaque:** ícone na barra de navegação, botão no hero, na ficha, no contato e no rodapé.
+- **Identidade Bleach mais forte:**
+  - zanpakutō no hero que sai da bainha, com brilho percorrendo a lâmina;
+  - borboletas do inferno (jigokuchō) batendo as asas;
+  - cortes **Getsuga Tenshō** entre as seções;
+  - nomes de zanpakutō nos cartões de habilidade (斬月, 流刃若火, 千本桜, 鏡花水月, 氷輪丸, 侘助);
+  - faixa de **referências visuais** com as imagens do anime em duotone de mangá.
+- **Bankai mais forte:** onda de choque, um Getsuga Tenshō atravessando a tela e aviso "卍解 · Bankai ativado".
+- **Novas animações de rolagem:**
+  - katana de progresso na lateral (computador): a lâmina sai da bainha conforme a leitura avança;
+  - títulos revelados por um corte vermelho;
+  - a espada do hero gira com a rolagem;
+  - a faixa de referências inclina com a velocidade;
+  - os números contam ao aparecer.
+- **Animações de botões:** brilho de lâmina no hover, reiatsu pulsando no botão principal e onda de reiatsu no clique.
+- **Segurança:**
+  - GSAP, ScrollTrigger e Lenis hospedados no próprio site (`lib/`), sem scripts de terceiros;
+  - política de segurança de conteúdo (CSP) com hash do único script inline;
+  - links externos com `noopener noreferrer`;
+  - links do `CONFIG` validados (só `https://`);
+  - `referrer` restrito;
+  - `.well-known/security.txt`.
 
 ## Arquivos
 
@@ -17,11 +44,14 @@ Não precisa instalar nada: dá dois cliques no `index.html` e abre.
 | `css/style.css` | Todo o visual: cores, fontes, layout e animações em CSS |
 | `js/dados.js` | **O que você edita:** `CONFIG`, os 5 estudos de caso, os 19 repositórios, o mapa de habilidades e os textos em inglês |
 | `js/app.js` | O funcionamento (sem módulos, para abrir com dois cliques) |
+| `lib/` | GSAP 3.12.5, ScrollTrigger e Lenis 1.1.13 hospedados no próprio site |
+| `assets/referencias/` | As 5 imagens de referência de Bleach usadas na faixa de referências |
+| `.well-known/security.txt` | Onde relatar falhas de segurança |
 | `assets/projetos/` | Capturas reais dos 5 projetos (computador, celular e mais abaixo na página) e prévias em vídeo de 6 s |
 | `assets/arte/` | Ensō, tinta e pincel pré-desenhados (leves e rápidos) |
 | `assets/bleach/` | Lugar das imagens do anime, opcional (veja o `LEIA-ME.md` de lá) |
 | `assets/og.png` | Imagem de compartilhamento 1200×630 (LinkedIn, WhatsApp) |
-| `ferramentas/` | Script que converte as imagens do anime para AVIF, WebP e JPG |
+| `ferramentas/` | `imagens.mjs` (converte as imagens do anime) e `cabecalho.mjs` (fontes e CSP, veja abaixo) |
 | `PROMPT.md` | O prompt da versão 3.0, para reusar em qualquer IA |
 | `IDENTIDADE.md` | Guia da identidade visual |
 | `sitemap.xml`, `robots.txt` | Para o Google encontrar o site |
@@ -57,7 +87,8 @@ var CONFIG = {
   repoDoSite: "leadpagecarlos",
   email: "",          // → botão "Copiar e-mail" e envio do formulário
   linkedin: "",       // ex.: "https://www.linkedin.com/in/seu-perfil"
-  whatsapp: "",       // só números com DDI e DDD, ex.: "5548999999999"
+  whatsapp: "5548996170281",  // só números com DDI e DDD
+  telefone: "(48) 99617-0281", // como o número aparece escrito
   curriculo: "",      // link do PDF → botão "Currículo" na barra e no contato
   foto: "",           // ex.: "assets/foto.jpg" → entra na ficha no lugar do "CS"
   formspree: "",      // código do formspree.io → o formulário envia direto
@@ -92,8 +123,10 @@ Tudo em `js/dados.js`:
 - **Mapa de habilidades:** `var SKILLS` e `var SKILL_PROJECTS`.
 - **Textos em inglês:** `var EN` (o português está no próprio `index.html`).
 
-Se escrever **kanji ou kana novos**, acrescente-os ao parâmetro `text=` da fonte japonesa no `<head>` do `index.html`
-(a fonte vem só com os caracteres usados, para o site carregar rápido).
+**Depois de mudar textos ou o script do `<head>`, rode `node ferramentas/cabecalho.mjs`.** Ele:
+
+- monta as fontes japonesas só com os caracteres usados (o site carrega rápido);
+- recalcula o hash da política de segurança (CSP). Sem isso, um kanji novo pode aparecer em outra fonte, e um script do `<head>` alterado seria bloqueado pelo navegador.
 
 ## 5. Imagens do anime (opcional)
 
@@ -101,19 +134,22 @@ O site já vem completo com tudo desenhado em código. Para usar as 5 imagens de
 siga o `assets/bleach/LEIA-ME.md` (salvar as imagens, rodar `npm run imagens` na pasta `ferramentas` e mudar `imagensOficiais` para `true`).
 O crédito no rodapé muda sozinho.
 
-## O que foi testado
+## O que foi testado (versão 4.0)
 
 - Larguras **375, 768, 1280 e 1440 px**: sem rolagem horizontal e sem erros no console.
-- **Teclado**: Bankai (B), paleta (Ctrl K, setas, Enter, Esc), busca (/), estudo de caso (setas ← → e Esc devolvendo o foco ao botão).
-- **Link direto** `#caso-ingrid` abre o estudo de caso certo; menu do celular abre, trava o fundo e leva à seção.
-- **Inglês**: título, textos, filtros, datas e estudos de caso trocam juntos.
-- **Reduzir movimento**: sem abertura, sem paralaxe, sem partículas, página completa e parada. **Sem JavaScript**: todo o conteúdo aparece.
-- **Imagens oficiais** (com imagens de teste): pôster do hero, troca no Bankai, faixa de tinta, horizonte e contato. A primeira visita baixa só o pôster do hero; o do Bankai só carrega quando o modo é ligado.
-- **Lighthouse** (servidor local, sem compressão nem HTTPS): celular desempenho 87–90, acessibilidade 100, SEO 100, LCP ≈ 2,4 s, CLS ≈ 0; computador desempenho 99.
-  No GitHub Pages (com HTTPS e compressão) a nota de boas práticas deve subir, porque aqui ela só perdeu pontos por falta de HTTPS.
+- Abrindo com dois cliques (`file://`), com a CSP ligada: tudo funciona, inclusive as animações.
+- **Teclado:** Bankai (B), paleta (Ctrl K), busca (/), estudo de caso (setas e Esc devolvendo o foco).
+- **Navegação:** link direto `#caso-ingrid`, menu do celular, barra fixa do celular aparecendo depois do hero.
+- **Idioma:** inglês completo.
+- **Sem animação:** "reduzir movimento" e sem JavaScript (o conteúdo, o WhatsApp e o GitHub continuam funcionando).
+- **Lighthouse** (servidor local, sem HTTPS e sem compressão):
+  - computador: desempenho 92, acessibilidade 100, SEO 100, CLS 0,003;
+  - celular: acessibilidade 100 e SEO 100. O desempenho variou bastante no dia do teste: a versão 3.0, medida nas mesmas condições, também caiu de 87–90 para 60–62, e a 4.0 ficou em 55–58.
+  - A nota de boas práticas só perde pontos por falta de HTTPS, que o GitHub Pages já oferece.
 
 ## Checklist antes de mandar para empresas
 
+- [x] WhatsApp e GitHub no site
 - [ ] Preencher `email` e `linkedin` no `CONFIG` (e `curriculo`, se tiver o PDF)
 - [ ] Colocar uma foto profissional (`foto` no `CONFIG`)
 - [ ] Conferir se o nome “Carlos Serra” está certo (e o sobrenome completo, se quiser)

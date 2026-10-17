@@ -28,6 +28,17 @@ const arrow = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" strok
 const arrowR = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>';
 const isTyping = t => t && (/^(input|textarea|select)$/i.test(t.tagName) || t.isContentEditable);
 const lenis = () => window.__lenis;
+/* Links vindos do CONFIG: só https:// (ou caminho do próprio site). Bloqueia javascript:, data: e afins. */
+const safeUrl = (u, allowRelative) => {
+  const v = String(u || "").trim();
+  if (/^https:\/\/[^\s"'<>]+$/i.test(v)) return v;
+  if (allowRelative && /^(?!\/\/)[\w./-]+$/.test(v) && !/^[a-z]+:/i.test(v)) return v;
+  return "";
+};
+["linkedin", "curriculo"].forEach(k => { CONFIG[k] = safeUrl(CONFIG[k], k === "curriculo"); });
+CONFIG.foto = safeUrl(CONFIG.foto, true);
+CONFIG.whatsapp = String(CONFIG.whatsapp || "").replace(/\D/g, "");
+CONFIG.email = /^[^\s@<>"']+@[^\s@<>"']+\.[a-z]{2,}$/i.test(String(CONFIG.email || "").trim()) ? CONFIG.email.trim() : "";
 
 /* ---------- idioma (PT/EN) ---------- */
 let lang = (() => {
@@ -229,8 +240,8 @@ $("#page").innerHTML = CASES.map((c, i) => `
         <div class="chips">${c.stack.map(s => `<span class="chip">${esc(s)}</span>`).join("")}</div>
         <div class="acts">
           <button class="open" type="button" data-case="${i}"><span class="p-cb"></span> ${arrowR}</button>
-          <a class="p-lv" href="${PAGES(c.repo)}" target="_blank" rel="noopener"></a>
-          <a class="p-cd" href="${REPO(c.repo)}" target="_blank" rel="noopener"></a>
+          <a class="p-lv" href="${PAGES(c.repo)}" target="_blank" rel="noopener noreferrer"></a>
+          <a class="p-cd" href="${REPO(c.repo)}" target="_blank" rel="noopener noreferrer"></a>
         </div>
       </div>
     </div>
@@ -298,8 +309,8 @@ function openCase(i, keepFocus) {
     <div><h4>${u.dec}</h4><ul>${c.dec.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>
     <div><h4>${u.stack}</h4><div class="chips">${c.stack.map(s => `<span class="chip">${esc(s)}</span>`).join("")}</div></div>
     <div class="case-links">
-      <a class="btn primary" href="${PAGES(c.repo)}" target="_blank" rel="noopener">${u.liveFull} ${arrow}</a>
-      <a class="btn" href="${REPO(c.repo)}" target="_blank" rel="noopener">${u.codeFull} ${arrow}</a>
+      <a class="btn primary" href="${PAGES(c.repo)}" target="_blank" rel="noopener noreferrer">${u.liveFull} ${arrow}</a>
+      <a class="btn" href="${REPO(c.repo)}" target="_blank" rel="noopener noreferrer">${u.codeFull} ${arrow}</a>
     </div>
     <nav class="case-nav" aria-label="${u.prev} / ${u.next}">
       <button type="button" data-go="-1"><small>← ${u.prev}</small>${esc(prev.name)}</button>
@@ -387,8 +398,8 @@ function renderRegistry() {
       <p>${esc(rd(r))}</p>
       <span class="lang">${r.l ? `<i style="--c:${LANG_COLOR[r.l] || "#888"}"></i>${esc(r.l)}` : '<span class="muted">—</span>'}</span>
       <div class="acts">
-        ${r.pages ? `<a href="${PAGES(r.n)}" target="_blank" rel="noopener" aria-label="${esc(u.liveOf(rt(r)))}">${u.live}</a>` : ""}
-        <a href="${REPO(r.n)}" target="_blank" rel="noopener" aria-label="${esc(u.codeOf(rt(r)))}">${u.code}</a>
+        ${r.pages ? `<a href="${PAGES(r.n)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(u.liveOf(rt(r)))}">${u.live}</a>` : ""}
+        <a href="${REPO(r.n)}" target="_blank" rel="noopener noreferrer" aria-label="${esc(u.codeOf(rt(r)))}">${u.code}</a>
       </div>
     </article>`).join("") : `<p class="empty">${esc(u.empty(state.q.trim()))}</p>`;
   $("#resultCount").textContent = u.results(list.length);
@@ -484,6 +495,7 @@ function copyText(text) {
 const briefText = () => {
   const url = ONLINE ? location.origin + location.pathname : SITE_URL;
   let extra = "";
+  if (CONFIG.whatsapp) extra += `\nWhatsApp: ${phoneTxt()} · https://wa.me/${CONFIG.whatsapp}`;
   if (CONFIG.email) extra += `\n${U().email}: ${CONFIG.email}`;
   if (CONFIG.linkedin) extra += `\nLinkedIn: ${CONFIG.linkedin}`;
   return U().brief(url, extra);
@@ -504,19 +516,61 @@ function renderContact() {
   $$("[data-dyn]", actions).forEach(n => n.remove());
   $$("[data-dyn]", $("#contactList")).forEach(n => n.remove());
   const add = (h, where = "beforeend") => actions.insertAdjacentHTML(where, h);
-  ghBtn.classList.toggle("primary", !CONFIG.email);
+  ghBtn.classList.toggle("primary", !CONFIG.email && !CONFIG.whatsapp);
+  wireWhatsApp();
   if (CONFIG.email) {
     add(`<button class="btn primary magnet" type="button" data-dyn data-copy-email>${u.copyEmail}</button>`, "afterbegin");
     $("#contactList").insertAdjacentHTML("afterbegin", `<div data-dyn><span>${u.email}</span><b style="user-select:all">${esc(CONFIG.email)}</b></div>`);
   }
   if (CONFIG.linkedin) {
-    add(`<a class="btn magnet" data-dyn href="${esc(CONFIG.linkedin)}" target="_blank" rel="noopener">LinkedIn</a>`);
-    $("#contactList").insertAdjacentHTML("beforeend", `<div data-dyn><span>LinkedIn</span><a href="${esc(CONFIG.linkedin)}" target="_blank" rel="noopener">${esc(CONFIG.linkedin.replace(/^https?:\/\/(www\.)?/, ""))}</a></div>`);
+    add(`<a class="btn magnet" data-dyn href="${esc(CONFIG.linkedin)}" target="_blank" rel="noopener noreferrer">LinkedIn</a>`);
+    $("#contactList").insertAdjacentHTML("beforeend", `<div data-dyn><span>LinkedIn</span><a href="${esc(CONFIG.linkedin)}" target="_blank" rel="noopener noreferrer">${esc(CONFIG.linkedin.replace(/^https?:\/\/(www\.)?/, ""))}</a></div>`);
   }
-  if (CONFIG.whatsapp) add(`<a class="btn magnet" data-dyn href="https://wa.me/${esc(CONFIG.whatsapp.replace(/\D/g, ""))}" target="_blank" rel="noopener">WhatsApp</a>`);
-  if (CONFIG.curriculo) add(`<a class="btn magnet" data-dyn href="${esc(CONFIG.curriculo)}" target="_blank" rel="noopener">${u.cvPdf}</a>`);
+  if (CONFIG.curriculo) add(`<a class="btn magnet" data-dyn href="${esc(CONFIG.curriculo)}" target="_blank" rel="noopener noreferrer">${u.cvPdf}</a>`);
 }
 actions.addEventListener("click", e => { if (e.target.closest("[data-copy-email]")) copyEmail(); });
+
+/* WhatsApp e telefone: todos os elementos .js-wa / .js-phone saem do CONFIG (mensagem pronta no idioma da página) */
+function phoneTxt() {
+  if (CONFIG.telefone) return CONFIG.telefone;
+  const n = CONFIG.whatsapp.replace(/^55/, "");
+  return n.length === 11 ? `(${n.slice(0, 2)}) ${n.slice(2, 7)}-${n.slice(7)}` : `+${CONFIG.whatsapp}`;
+}
+const waUrl = () => `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(U().waMsg)}`;
+function wireWhatsApp() {
+  const has = !!CONFIG.whatsapp;
+  $$(".js-wa").forEach(a => { if (has) a.href = waUrl(); else a.hidden = true; });
+  $$(".js-phone-wrap").forEach(el => { el.hidden = !has; });
+  $$(".js-phone").forEach(el => { const t = has ? phoneTxt() : ""; if (el.textContent !== t) el.textContent = t; });
+  $(".ctas .btn[href='#destaques']").classList.toggle("primary", !has);
+  $("#dock").classList.toggle("no-wa", !has);
+}
+
+/* "Salvar contato": vCard gerado na hora a partir do CONFIG */
+function saveVcard() {
+  const lines = ["BEGIN:VCARD", "VERSION:3.0", "N:Serra;Carlos;;;", "FN:Carlos Serra",
+    `TITLE:${lang === "en" ? "Junior Full Stack Developer" : "Desenvolvedor Full Stack Júnior"}`,
+    CONFIG.whatsapp && `TEL;TYPE=CELL:+${CONFIG.whatsapp}`, CONFIG.email && `EMAIL;TYPE=INTERNET:${CONFIG.email}`,
+    `URL:${SITE_URL}`, `URL:https://github.com/${CONFIG.github}`, CONFIG.linkedin && `URL:${CONFIG.linkedin}`,
+    "ADR;TYPE=HOME:;;;Palhoça;SC;;Brasil", "END:VCARD"].filter(Boolean);
+  const url = URL.createObjectURL(new Blob([lines.join("\r\n")], { type: "text/vcard;charset=utf-8" }));
+  const a = document.createElement("a");
+  a.href = url; a.download = "carlos-serra.vcf"; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  announce(U().vcardDone);
+}
+document.addEventListener("click", e => { if (e.target.closest("#vcardBtn, [data-vcard]")) saveVcard(); });
+function copyPhone() { copyText(phoneTxt()).then(() => announce(U().phoneCopied(phoneTxt())), () => announce(phoneTxt())); }
+
+/* avisos curtos (leitor de tela + toast visual) */
+const toast = document.createElement("p");
+toast.className = "toast"; toast.setAttribute("role", "status"); toast.setAttribute("aria-live", "polite");
+document.body.appendChild(toast);
+let toastT = 0;
+function announce(msg) {
+  toast.textContent = msg; toast.classList.add("on");
+  clearTimeout(toastT); toastT = setTimeout(() => toast.classList.remove("on"), 2600);
+}
 if (CONFIG.curriculo) { const cv = $("#cvBtn"); cv.href = CONFIG.curriculo; cv.hidden = false; }
 
 /* formulário: Formspree; sem ele, abre o e-mail com a mensagem pronta */
@@ -544,7 +598,7 @@ if (CONFIG.curriculo) { const cv = $("#cvBtn"); cv.href = CONFIG.curriculo; cv.h
       return;
     }
     const btn = $("#fSend"); btn.disabled = true; out.textContent = U().sending;
-    const endpoint = /^https?:/.test(CONFIG.formspree) ? CONFIG.formspree : `https://formspree.io/f/${CONFIG.formspree}`;
+    const endpoint = /^https:\/\/formspree\.io\/f\/\w+$/.test(CONFIG.formspree) ? CONFIG.formspree : `https://formspree.io/f/${encodeURIComponent(String(CONFIG.formspree).replace(/\W/g, ""))}`;
     fetch(endpoint, { method: "POST", body: new FormData(f), headers: { Accept: "application/json" } })
       .then(r => { if (!r.ok) throw new Error(r.status); f.reset(); out.textContent = U().sent; out.classList.add("ok"); })
       .catch(() => { out.textContent = U().sendFail; out.classList.add("bad"); })
@@ -598,6 +652,32 @@ const licht = (() => {
   return { set(v) { bankai = v; parts.forEach(p => spawn(p, true)); } };
 })();
 
+/* ---------- borboletas do inferno (jigokuchō): asas batendo em CSS, voo em caminhos diferentes ---------- */
+(function jigokucho() {
+  const wing = `<path d="M0 0C-12-20-34-20-31-4-29 7-14 9 0 2Z"/><path class="vein" d="M-2-1C-12-8-22-11-27-6"/><path d="M0 3C-9 12-17 24-7 27-2 23 0 13 0 5Z"/>`;
+  const fly = (n, i) => `<span class="jg jg-${n}" style="--i:${i}"><svg viewBox="-36 -26 72 56"><g class="wl">${wing}</g><g class="wr"><g transform="scale(-1 1)">${wing}</g></g><path class="body" d="M0-7V18"/></svg></span>`;
+  $("#jigokuHero").innerHTML = [0, 1, 2, 3].map(i => fly(i, i)).join("");
+  $("#jigokuContact").innerHTML = [4, 5].map(i => fly(i, i)).join("");
+})();
+
+/* ---------- botões: onda de reiatsu no clique ---------- */
+if (!reduce) document.addEventListener("pointerdown", e => {
+  const b = e.target.closest(".btn, .nbtn, .bankai-btn, .phone-card, .dock a, .open"); if (!b) return;
+  const r = b.getBoundingClientRect(), w = document.createElement("span");
+  w.className = "ripple";
+  w.style.left = `${e.clientX - r.left}px`; w.style.top = `${e.clientY - r.top}px`;
+  b.appendChild(w); setTimeout(() => w.remove(), 700);
+});
+
+/* ---------- barra fixa de contato no celular: aparece depois do hero, some no contato ---------- */
+(function dock() {
+  const d = $("#dock"); let afterHero = false, atContact = false;
+  const sync = () => d.classList.toggle("on", afterHero && !atContact && !menuOpen);
+  new IntersectionObserver(([e]) => { afterHero = !e.isIntersecting; sync(); }, { rootMargin: "0px 0px -40% 0px" }).observe($(".hero"));
+  new IntersectionObserver(([e]) => { atContact = e.isIntersecting; sync(); }, { threshold: .15 }).observe($("#contato"));
+  addEventListener("menu-toggle", sync);
+})();
+
 /* ---------- modo Bankai (botão ou tecla B) ---------- */
 const bankaiBtn = $("#bankai"), flash = $("#flash");
 function toggleBankai() {
@@ -606,6 +686,11 @@ function toggleBankai() {
   bankaiBtn.setAttribute("aria-pressed", String(on));
   html.classList.toggle("bankai", on);
   licht.set(on);
+  announce(on ? U().bankaiOn : U().bankaiOff);
+  if (on && !reduce) {                       // Getsuga Tenshō atravessa a tela (CSS puro)
+    const g = $("#getsugaFly"); g.classList.remove("go"); void g.offsetWidth; g.classList.add("go");
+    flash.classList.remove("ring-go"); void flash.offsetWidth; flash.classList.add("ring-go");
+  }
   if (on && animOn) {
     gsap.timeline()
       .fromTo(flash.querySelector(".flash-cut"), { scaleX: 0, opacity: 1 }, { scaleX: 1, duration: .25, ease: "power4.in" })
@@ -654,6 +739,7 @@ function openMenu() {
   mmenu.hidden = false; mmenu.classList.add("closed");
   requestAnimationFrame(() => requestAnimationFrame(() => mmenu.classList.remove("closed")));
   menuBtn.setAttribute("aria-expanded", "true");
+  dispatchEvent(new Event("menu-toggle"));
   html.classList.add("menu-open");
   $("main").inert = true; $("footer").inert = true;
   lenis()?.stop();
@@ -664,6 +750,7 @@ function closeMenu(focusBtn) {
   menuOpen = false;
   mmenu.classList.add("closed");
   menuBtn.setAttribute("aria-expanded", "false");
+  dispatchEvent(new Event("menu-toggle"));
   html.classList.remove("menu-open");
   $("main").inert = false; $("footer").inert = false;
   lenis()?.start();
@@ -688,13 +775,18 @@ function commands() {
   const p = U().pal, list = [];
   SECTIONS.forEach(([id, k, pt, en]) => list.push({ k, label: `${p.go} ${lang === "en" ? en : pt}`, tag: p.sec, run: () => goTo(id) }));
   CASES.forEach((c, i) => list.push({ k: c.k, label: `${p.open}: ${c.name}`, tag: p.case, run: () => { lastBtn = $(`.panel[data-i="${i}"] .open`); openCase(i); } }));
+  if (CONFIG.whatsapp) {
+    list.push({ k: "話", label: `${p.wa} · ${phoneTxt()}`, tag: p.act, run: () => window.open(waUrl(), "_blank", "noopener,noreferrer") });
+    list.push({ k: "☎", label: p.phone, tag: p.act, run: copyPhone });
+  }
+  list.push({ k: "札", label: p.vcard, tag: p.act, run: saveVcard });
   list.push({ k: "写", label: p.brief, tag: p.act, run: () => copyBrief($("#briefOut")) });
   if (CONFIG.email) list.push({ k: "@", label: p.copy, tag: p.act, run: () => { goTo("contato"); copyEmail(); } });
-  if (CONFIG.curriculo) list.push({ k: "履", label: p.cv, tag: p.act, run: () => window.open(CONFIG.curriculo, "_blank", "noopener") });
+  if (CONFIG.curriculo) list.push({ k: "履", label: p.cv, tag: p.act, run: () => window.open(CONFIG.curriculo, "_blank", "noopener,noreferrer") });
   list.push({ k: "解", label: p.bankai, tag: "B", run: toggleBankai });
   list.push({ k: "語", label: p.lang, tag: p.act, run: () => setLang(lang === "en" ? "pt" : "en") });
   list.push({ k: "探", label: p.search, tag: "/", run: focusSearch });
-  list.push({ k: "⌂", label: p.gh, tag: p.act, run: () => window.open(`https://github.com/${CONFIG.github}`, "_blank", "noopener") });
+  list.push({ k: "⌂", label: p.gh, tag: p.act, run: () => window.open(`https://github.com/${CONFIG.github}`, "_blank", "noopener,noreferrer") });
   return list;
 }
 function renderPal() {
@@ -757,7 +849,7 @@ $("#langBtn").addEventListener("click", () => setLang(lang === "en" ? "pt" : "en
 const INTRO = html.classList.contains("intro-on"), T0 = performance.now();
 const introZoom = { v: INTRO ? 1.25 : 1 };   // a imagem assenta de 1,25 para 1 enquanto a abertura se parte
 (function loop() {
-  const bar = $("#progress"), hero = $(".hero"), dark = $("#heroDark");
+  const bar = $("#progress"), kp = $("#kpFill"), hero = $(".hero"), dark = $("#heroDark");
   const layers = $$("#scene .layer");
   let px = 0, py = 0, tx = 0, ty = 0, hh = 1, m = 1;
   const measure = () => { hh = hero.offsetHeight || 1; m = document.documentElement.scrollHeight - innerHeight; };  // medir fora do laço evita reflow a cada quadro
@@ -775,7 +867,11 @@ const introZoom = { v: INTRO ? 1.25 : 1 };   // a imagem assenta de 1,25 para 1 
     const y = scrollY, moving = Math.abs(tx - px) + Math.abs(ty - py) > .0005;
     if (y === lastY && !moving && introZoom.v === lastZ) return;   // nada mudou: não toca no estilo
     lastZ = introZoom.v;
-    if (y !== lastY) bar.style.transform = `scaleX(${m > 0 ? Math.min(1, y / m) : 0})`;
+    if (y !== lastY) {
+      const prog = m > 0 ? Math.min(1, y / m) : 0;
+      bar.style.transform = `scaleX(${prog})`;
+      kp.style.transform = `scaleY(${prog})`;            // a lâmina sai da bainha conforme a leitura avança
+    }
     lastY = y;
     if (!reduce && y < hh * 1.2) {
       const p = Math.min(1, y / hh);
@@ -868,7 +964,8 @@ if (CONFIG.goatcounter && ONLINE) {
    ROLAGEM SUAVE (Lenis) + ANIMAÇÕES (GSAP + ScrollTrigger)
    Sem as bibliotecas ou com "reduzir movimento", a página fica completa e parada.
    ========================================================================= */
-const LIBS = ["https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js", "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js", "https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"];
+// GSAP 3.12.5, ScrollTrigger e Lenis 1.1.13 hospedados no próprio site (lib/): nenhum script de terceiros na página
+const LIBS = ["lib/gsap.min.js", "lib/ScrollTrigger.min.js", "lib/lenis.min.js"];
 const loadScript = src => new Promise((ok, fail) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = fail; document.head.appendChild(s); });
 if (!reduce) requestAnimationFrame(() => setTimeout(() => {
   loadScript(LIBS[0]).then(() => loadScript(LIBS[1]))
@@ -989,6 +1086,48 @@ function setupAnim() {
   gsap.from(".contact .big-k", { rotate: -35, scale: .7, ease: "none", scrollTrigger: { trigger: ".contact", start: "top bottom", end: "bottom bottom", scrub: true } });
   gsap.from(".contact h2", { y: 70, opacity: 0, duration: 1.1, ease: "expo.out", scrollTrigger: { trigger: ".contact", start: "top 75%" } });
 
+  });
+  /* ===== versão 4.0: novas animações de rolagem ===== */
+  queue(() => {
+    /* zanpakutō do hero gira e desce com a rolagem */
+    gsap.to(".l-katana .katana", { rotate: -34, yPercent: 30, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+    /* cortes Getsuga Tenshō: o crescente atravessa a tela conforme a seção chega */
+    $$(".getsuga").forEach(g => gsap.timeline({ scrollTrigger: { trigger: g, start: "top 92%", end: "bottom 35%", scrub: .6 } })
+      .fromTo(g.querySelector("svg"), { clipPath: "inset(0 100% 0 0)", xPercent: -12 }, { clipPath: "inset(0 0% 0 0)", xPercent: 0, ease: "power2.out" })
+      .fromTo(g.querySelector(".gt-k"), { opacity: 0, x: -40 }, { opacity: 1, x: 0 }, "<.3"));
+  });
+  queue(() => {
+    /* títulos: um corte vermelho atravessa e revela o texto em diagonal */
+    $$(".chap-title h2, .refs-t").forEach(h => {
+      const sl = document.createElement("i"); sl.className = "h-slash"; sl.setAttribute("aria-hidden", "true");
+      sl.style.top = `${h.offsetTop + h.offsetHeight * .55}px`; h.parentElement.appendChild(sl);
+      gsap.timeline({ scrollTrigger: { trigger: h, start: "top 85%" } })
+        .fromTo(sl, { scaleX: 0, opacity: 1 }, { scaleX: 1, duration: .35, ease: "power4.in" })
+        .fromTo(h, { clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)" }, { clipPath: "polygon(0 0, 110% 0, 100% 100%, 0 100%)", duration: .7, ease: "expo.out" }, "<.2")
+        .to(sl, { opacity: 0, duration: .3 }, "<.2");
+    });
+  });
+  queue(() => {
+    /* números da ficha contam ao aparecer */
+    $$(".numbers b").forEach(b => {
+      const t = b.firstChild; const end = parseInt(t.textContent, 10); if (!end) return;
+      const o = { v: 0 };
+      gsap.to(o, { v: end, duration: 1.2, ease: "power2.out", onUpdate: () => { t.textContent = Math.round(o.v); }, scrollTrigger: { trigger: b, start: "top 90%" } });
+    });
+    /* cartão do WhatsApp e cartões de habilidade entram com corte diagonal */
+    gsap.from(".phone-card", { clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)", duration: .9, ease: "expo.out", scrollTrigger: { trigger: ".phone-card", start: "top 90%" } });
+    gsap.from(".arm .zk", { x: -20, opacity: 0, duration: .6, stagger: .08, ease: "power3.out", scrollTrigger: { trigger: ".arsenal", start: "top 80%" } });
+  });
+  queue(() => {
+    /* faixa de referências: inclina com a velocidade da rolagem */
+    const track = $(".refs-strip"); let skew = 0;   // a faixa interna já se move em CSS; a inclinação vai no contêiner
+    ScrollTrigger.create({ trigger: ".refs", start: "top bottom", end: "bottom top", onUpdate: st => {
+      const v = Math.max(-12, Math.min(12, st.getVelocity() / 220));
+      if (Math.abs(v - skew) > .4) { skew = v; gsap.to(track, { skewX: -skew, duration: .5, ease: "power3.out", overwrite: true }); }
+    } });
+    gsap.from(".ref", { y: 60, rotate: (i) => (i % 2 ? 4 : -4), opacity: 0, duration: .9, stagger: .06, ease: "expo.out", scrollTrigger: { trigger: ".refs", start: "top 80%" } });
+    /* borboletas sobem mais devagar que a página (profundidade) */
+    $$(".jigoku-layer").forEach(l => gsap.to(l, { yPercent: -18, ease: "none", scrollTrigger: { trigger: l.parentElement, start: "top bottom", end: "bottom top", scrub: true } }));
   });
   const idleRun = () => {
     const fn = later.shift(); if (!fn) { ScrollTrigger.refresh(); return; }
