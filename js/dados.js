@@ -1,22 +1,22 @@
 /* =========================================================================
    DADOS DO PORTFÓLIO · edite aqui. O resto do site se monta sozinho.
+   Depois de mudar textos, rode:  node ferramentas/cabecalho.mjs
    ========================================================================= */
 
 /* ----- CONFIGURAÇÃO: campos vazios somem da página ----- */
 var CONFIG = {
+  nome: "Carlos Serra",
   github: "carlosserra-a11y",
-  repoDoSite: "leadpagecarlos", // repositório deste portfólio: não aparece como "NOVO" no arquivo
-  email: "",            // ex.: "seuemail@gmail.com"   → botão "Copiar e-mail" e envio do formulário por e-mail
-  linkedin: "",         // ex.: "https://www.linkedin.com/in/seu-perfil"
-  whatsapp: "5548996170281", // só números com DDI e DDD → botões "WhatsApp", barra fixa no celular e "Salvar contato"
-  telefone: "(48) 99617-0281", // como o número aparece escrito no site
-  curriculo: "",        // link do PDF do currículo → botão "Currículo" na barra e no contato
-  foto: "",             // ex.: "assets/foto.jpg" → entra na ficha no lugar do "CS"
-  formspree: "",        // código do formulário do formspree.io, ex.: "xyzabcd" → formulário envia direto
-  goatcounter: "",      // código do goatcounter.com, ex.: "carlosserra" → contador de visitas sem cookies
-  imagensOficiais: false, // true = usa as imagens do anime da pasta assets/bleach/ (veja o LEIA-ME de lá)
-  buscarRepos: true,    // com o site no ar, busca repositórios novos na API do GitHub
-  idioma: "pt"          // idioma inicial: "pt" ou "en"
+  repoDoSite: "leadpagecarlos",    // repositório deste portfólio: não aparece como "novo" na lista
+  email: "carlosserraap55@gmail.com",
+  whatsapp: "5548996170281",       // só números, com DDI e DDD
+  telefone: "(48) 99617-0281",     // como o número aparece escrito
+  linkedin: "",                    // ex.: "https://www.linkedin.com/in/seu-perfil"
+  curriculo: "",                   // link do PDF do currículo
+  formspree: "",                   // código do formspree.io; vazio = o formulário abre o seu e-mail com a mensagem pronta
+  buscarRepos: true,               // com o site no ar, busca repositórios novos na API do GitHub
+  katana3d: true,                  // zanpakutō em 3D no topo (cai para o desenho em SVG se o aparelho não tiver WebGL)
+  idioma: "pt"
 };
 
 /* ----- Os 5 melhores repositórios (estudos de caso) -----
@@ -118,132 +118,106 @@ var REPOS = [
   { n:"Curriculum-programador", t:"Curriculum-programador", d:"Repositório criado para o currículo; ainda vazio.", de:"Repository created for the résumé; still empty.", l:"", c:"inicio", at:"2026-08-20", pages:false, tags:"curriculo resume" }
 ];
 
-/* ----- Mapa de habilidades: quais projetos usam cada habilidade ----- */
-var SKILLS = [
-  ["js","JavaScript"],["ts","TypeScript"],["react","React 19"],["tailwind","Tailwind"],["node","Node.js"],["express","Express"],
-  ["sqlite","SQLite"],["three","three.js"],["webgl","WebGL / GLSL"],["gsap","GSAP"],["lenis","Lenis"],["gemini","Gemini IA"],["tests","node:test"],["sec","Segurança / LGPD"]
-];
-var SKILL_PROJECTS = [
-  { name:"Figaro's Pizzaria 2.0", repo:"Figarus-2.0", s:["js","node","express","sqlite","three","lenis","tests","sec"] },
-  { name:"São Cristóvão 3.0", repo:"sao-cristovao-3.0", s:["ts","react","tailwind","node","express","gemini","tests","sec"] },
-  { name:"Smartech 3.0", repo:"smartech-3.0", s:["js","three","gsap","gemini","tests","sec"] },
-  { name:"Ingrid Lima", repo:"ingrid-market", s:["js","webgl","gsap","lenis"] },
-  { name:"CS Store", repo:"csiphone", s:["js","tailwind","three"] },
-  { name:"Figaro's Pizzaria", repo:"Figaros-Pizzaria", s:["js","node","express","sqlite","three"] },
-  { name:"São Cristóvão Burger", repo:"s-o-cristovao", s:["ts","react","gemini"] },
-  { name:"Smartech 2.0", repo:"smartech-2.0", s:["js","gsap","three","tests","sec"] }
+
+/* ----- Grade "Todos os projetos": os que têm captura de tela em assets/projetos/ ----- */
+var PROJECTS = [
+  { repo:"Figarus-2.0", shot:"figarus", c:"sistema", t:"Figaro's Pizzaria 2.0", d:"Pedidos com montador de pizza, checkout por CEP, Express + SQLite e painel do dono.", de:"Ordering with a pizza builder, ZIP-code checkout, Express + SQLite and an owner dashboard.", tags:["Node.js","SQLite","three.js"] },
+  { repo:"sao-cristovao-3.0", shot:"saocristovao", c:"sistema", t:"São Cristóvão 3.0", d:"Cardápio em React + TypeScript com burger guiado pela rolagem e atendente de IA.", de:"React + TypeScript menu with a scroll-driven burger and an AI ordering assistant.", tags:["React 19","TypeScript","Gemini"] },
+  { repo:"smartech-3.0", shot:"smartech", c:"negocio", t:"Smartech 3.0", d:"Showroom 3D com Raio-X, calculadora pela NBR 14518 e consultor técnico com IA.", de:"3D showroom with X-ray mode, NBR 14518 calculator and an AI technical consultant.", tags:["three.js","GSAP","Gemini"] },
+  { repo:"ingrid-market", shot:"ingrid", c:"negocio", t:"Ingrid Lima", d:"Olho realista feito só com shader WebGL guiando a rolagem até o WhatsApp.", de:"A realistic eye drawn only with a WebGL shader, guiding the scroll to WhatsApp.", tags:["WebGL","GLSL","GSAP"] },
+  { repo:"csiphone", shot:"csstore", c:"negocio", t:"CS Store", d:"Loja de iPhones com showroom 3D, catálogo e calculadora de troca.", de:"iPhone store with a 3D showroom, catalog and trade-in calculator.", tags:["Tailwind","three.js"] },
+  { repo:"Figaros-Pizzaria", shot:"figaros1", c:"sistema", t:"Figaro's Pizzaria 1.0", d:"Primeira versão: cardápio completo, montador de pizza, SQLite e painel com senha.", de:"First version: full menu, pizza builder, SQLite and a password-protected dashboard.", tags:["Node.js","Express","SQLite"] },
+  { repo:"s-o-cristovao", shot:"saocristovao1", c:"sistema", t:"São Cristóvão Burger", d:"Primeira versão: carrinho persistente, assistente gastronômico e estúdio de imagens com Gemini.", de:"First version: persistent cart, food assistant and an image studio with Gemini.", tags:["React","TypeScript","Gemini"] },
+  { repo:"smartech-2.0", shot:"smartech2", c:"negocio", t:"Smartech 2.0", d:"Site sem build com tema claro e escuro, calculadora testável e GSAP verificado por SRI.", de:"No-build site with light and dark themes, a testable calculator and SRI-verified GSAP.", tags:["GSAP","node:test"] },
+  { repo:"smartech", shot:"smartech1", c:"negocio", t:"Smartech 1.0", d:"Primeira versão do site de coifas industriais com tecnologia UV-C.", de:"First version of the UV-C industrial hood website.", tags:["Tailwind","three.js"] }
 ];
 
 /* ----- Textos em inglês (o português está no próprio HTML) ----- */
 var EN = {
   docTitle:"Carlos Serra · Junior Full Stack Developer",
-  docDesc:"Carlos Serra, junior full stack developer in Palhoça, Brazil. Sites and systems with React, TypeScript, Node.js, SQLite, three.js and AI (Gemini). 19 public projects on GitHub.",
-  skip:"Skip to content", ghLabel:"Carlos Serra on GitHub (opens in a new tab)", waLabel:"Carlos Serra on WhatsApp",
-  ctaWa:"Message on WhatsApp", heroPhone:"WhatsApp and phone", vcard:"Save contact", phoneK:"WhatsApp · tap to chat",
-  refK:"Visual references", refT:"The aesthetic behind this site", footNav:"Contact", dockLabel:"Quick contact", dockWa:"WhatsApp", navLabel:"Sections", langLabel:"PT · Ler em português", cmdLabel:"Open command palette (Ctrl K)", menu:"Menu", cv:"Résumé",
-  nav1:"Summary", nav2:"Highlights", nav3:"Projects", nav4:"Journey", nav5:"Skills", nav6:"Contact", nav7:"Method", nav8:"Education",
-  status:"Available for an internship or junior role", role:"Junior Full Stack Developer · Palhoça, Brazil",
-  lede:"I build sites and systems for real businesses: menus that take orders, <em>dashboards backed by a database</em>, 3D showrooms and AI assistants.",
-  cta1:"See projects", cta2:"Get in touch", m1:"public repositories on GitHub", m2:"days from my first “hello world” to my first system with a database", m3:"automated test files", scroll:"Scroll",
-  resK:"For recruiters · a 30-second read", resT:"The essentials",
-  idN:"Name", idA:"Age", idAv:"24", idF:"Role", idFv:"Junior Full Stack", idB:"Based in", idE:"Education", idEv:"Systems Analysis · FMP · 2nd term", idS:"Status", idSv:"Available",
-  copyBrief:"Copy summary",
-  b1k:"Who I am", b1t:"I learn fast and ship everything", b1p:"I started coding in August 2026. In eight weeks I went from plain HTML to systems with a server, database, tests and AI.",
-  b2k:"What I deliver", b2t:"End-to-end projects", b2l:"<li>Responsive, accessible front-end</li><li>Node.js + Express APIs</li><li>Database and admin dashboard</li><li>3D, animation and AI when they help the business</li>",
-  b3k:"Main stack", b3p:"React 19, Vite, Tailwind 4, Express 5, SQLite, three.js, GSAP and Google Gemini. Tests with <code>node:test</code>.",
-  b4k:"What I'm looking for", b4t:"Internship or junior role", b4p:"A team where I deliver from week one, get code review and grow in front-end or full stack. On-site, hybrid or remote.",
-  n1:"real businesses in Greater Florianópolis with a site built by me", n2:"projects published and live on GitHub Pages", n3:"versions of the same site, each better than the last (Smartech 1 → 3)", n4:"languages on GitHub: HTML, JavaScript and TypeScript",
-  desK:"Case studies · the 5 best repositories", desT:"Featured projects", desP:"Each panel is a real business problem and what I built to solve it. Open the case study to see the technical decisions.", desH:"Read it like manga: right to left",
+  docDesc:"Carlos Serra, junior full stack developer in Palhoça, Brazil. Websites and systems for real businesses with React, TypeScript, Node.js, SQLite, three.js and AI. Open to internships and junior roles.",
+  skip:"Skip to content", navLabel:"Sections", langLabel:"PT · Ler em português", ghLabel:"GitHub (opens in a new tab)", topWa:"Let's talk",
+  nav1:"Work", nav2:"Projects", nav3:"Process", nav4:"About", nav5:"Contact",
+  kicker:"Open to internships and junior roles · Palhoça, Brazil · hybrid or remote",
+  role:"Full stack developer.",
+  lede:"I build websites and systems for real businesses: menus that take WhatsApp orders, dashboards backed by a database, 3D showcases and AI-assisted service. Tested, shipped and maintained by me.",
+  ctaWa:"Message on WhatsApp", ctaWork:"See my work", copyEmail:"Copy email",
+  p1:"public repositories", p2:"real businesses served", p3:"automated test files", cap:"24 · Systems Analysis · FMP", scrollLabel:"Scroll to my work",
+  cliT:"Websites and systems delivered for",
+  workK:"Selected work", workT:"Real business problems, solved with code.", workP:"Five projects that show what I do end to end: understand the problem, design, build with tests and ship.",
   caseClose:"Close case study",
-  arqK:"Full archive", arqK2:"repositories", arqT:"All projects", arqP:"From the first site to the latest, exercises included. You can follow the progress line by line.",
-  filterLabel:"Filter by category", sortLabel:"Sort", sort1:"Most recent", sort2:"Name", sort3:"Category", viewLabel:"View mode", view1:"List", view2:"Grid",
-  searchLabel:"Search projects", searchPh:"Search: react, 3D, pizza…", arqNote:"Public repositories from", arqDate:"October 2026",
-  trajK:"August → October 2026", trajT:"Two months of growth", trajP:"My first repository is called “meu-primeiro-site” (my first site), and its description is “boa sorte carlos” (good luck, Carlos). Seven weeks later I had a system with a database, tests and a password-protected dashboard.",
-  t1d:"Aug 20, 2026", t1t:"First commit", t1p:"“meu-primeiro-site” (TechNova), an HTML résumé and “ADS students”: hand-written HTML and CSS, fixed menu and smooth scrolling.",
-  t2d:"Aug 27, 2026", t2t:"Multiple pages and images", t2p:"Navigation between pages, images and links between projects published on GitHub Pages.",
-  t3d:"Sep 3, 2026", t3t:"First site for a business", t3p:"“Pizzaria do Michelangelo”: animated background, menu and an about section. The Figaro's repository was born the same day.",
-  t4d:"Sep 17, 2026", t4t:"FMP exercises", t4p:"Personal introduction with a background video, a page promoting Florianópolis and a full theme page about Jujutsu Kaisen.",
-  t5d:"Oct 1, 2026", t5t:"Tailwind and a real store", t5p:"CS Store, an iPhone shop in Palhoça: 3D showroom, catalog, trade-in calculator and FAQ.",
-  t6d:"Oct 5–7, 2026", t6t:"Smartech 1.0 → 3.0 in three days", t6p:"3D showroom with three.js, X-ray mode, a calculator following the NBR 14518 standard, an audio guide and a Gemini technical consultant.",
-  t7d:"Oct 6, 2026", t7t:"Real full stack", t7p:"Figaro's Pizzaria: Express server, SQLite with order history, a developer dashboard with scrypt passwords and a 3D pizza built in code.",
-  t8d:"Oct 11, 2026", t8t:"TypeScript, React 19 and AI ordering", t8p:"São Cristóvão 3.0: an assistant that builds the order, cookie notice (LGPD), security headers and 10 test files.",
-  t9d:"Oct 16, 2026", t9t:"WebGL shader from scratch", t9p:"Ingrid Lima: a realistic eye drawn only with a shader that follows the mouse, blinks and guides the scroll. No images.",
-  arsK:"Skills with proof", arsT:"Technical arsenal", arsP:"No made-up percentage bars. Every skill points to the project where it shows up.",
-  a1h:"Front-end", a1:"<dt>Semantic HTML and modern CSS</dt><dd>Grid, design tokens, light and dark themes. Seen in <a href=\"https://github.com/carlosserra-a11y/smartech-3.0\" target=\"_blank\" rel=\"noopener noreferrer\">Smartech 3.0</a></dd><dt>React 19 + TypeScript + Vite</dt><dd>Components, cart state, tabs. Seen in <a href=\"https://github.com/carlosserra-a11y/sao-cristovao-3.0\" target=\"_blank\" rel=\"noopener noreferrer\">São Cristóvão 3.0</a></dd><dt>Tailwind CSS</dt><dd>Seen in <a href=\"https://github.com/carlosserra-a11y/csiphone\" target=\"_blank\" rel=\"noopener noreferrer\">CS Store</a> and São Cristóvão</dd>",
-  a2h:"Back-end", a2:"<dt>Node.js + Express 5</dt><dd>REST API, compression, static files. Seen in <a href=\"https://github.com/carlosserra-a11y/Figarus-2.0\" target=\"_blank\" rel=\"noopener noreferrer\">Figaro's 2.0</a></dd><dt>SQLite</dt><dd>Order history and menu change log</dd><dt>Authentication</dt><dd>scrypt passwords and a first-access code for the admin dashboard</dd>",
-  a3h:"3D and animation", a3:"<dt>three.js and WebGL</dt><dd>Models built in code, Fresnel X-ray, an eye shader. Seen in <a href=\"https://github.com/carlosserra-a11y/ingrid-market\" target=\"_blank\" rel=\"noopener noreferrer\">Ingrid Lima</a></dd><dt>GSAP + ScrollTrigger, Lenis</dt><dd>Scroll-driven animation, pinned sections</dd><dt>Performance</dt><dd>Single animation loop, pausing off-screen, automatic 2D fallback</dd>",
-  a4h:"Artificial intelligence", a4:"<dt>Google Gemini API</dt><dd>An assistant that builds orders and a technical consultant with Google Search</dd><dt>Gemini TTS</dt><dd>Audio guide with the browser's voice as a fallback</dd><dt>Plan B without AI</dt><dd>Without an API key, the site answers from a local knowledge base</dd>",
-  a5h:"Quality and security", a5:"<dt>Automated tests</dt><dd>15 test files with <code>node:test</code>: prices, orders, opening hours, consent</dd><dt>LGPD and headers</dt><dd>Cookie notice, CSP, validation of external links</dd><dt>Accessibility</dt><dd>Keyboard navigation, “reduce motion”, AA contrast</dd>",
-  a6h:"Tools", a6:"<dt>Git and GitHub</dt><dd>19 repositories, continuous publishing on GitHub Pages</dd><dt>esbuild, Vite and npm</dt><dd>Bundling the 3D code, React and libraries</dd><dt>AI in the workflow</dt><dd>I use coding assistants with review and tests before shipping</dd>",
-  smT:"Skill map", smP:"Hover (or focus with the keyboard) a skill to light up the projects that use it. Click to pin it.", smSkills:"Skills",
-  metK:"How I work", metT:"From brief to live site",
+  allK:"All projects", allT:"Everything that's live, from my first site to the latest.", filterLabel:"Filter projects", moreT:"Exercises and first steps",
+  procK:"How I work", procT:"From the client's request to a live site.",
   s1t:"Understand the business", s1p:"Before opening the editor: what the client sells, how orders arrive and what goes wrong today.",
-  s2t:"Design the solution", s2p:"Visual identity, color and type tokens and the shortest path to an order or a contact.",
-  s3t:"Build with tests", s3p:"Pricing and ordering rules become pure functions with tests. The visuals never break the rules.",
-  s4t:"Ship and improve", s4p:"Live on GitHub Pages, measuring performance. Then a 2.0 and a 3.0 with what I learned.",
-  eduK:"Education", eduT:"I study and I build", eduC:"Associate degree in technology · in progress", eduH:"Systems Analysis and Development (ADS)", eduS:"FMP · Faculdade Municipal de Palhoça · Palhoça, Brazil", eduM:"2nd term of the program", eduL:"Studying now",
-  eduList:"<li>Relational databases and data modeling</li><li>Programming logic and data structures</li><li>Automated testing and good Git practices</li><li>Technical English for documentation</li>",
-  conK:"Contact", conT:"Shall we build <span class=\"out\">together?</span>", conP:"I'm looking for my first internship or junior role. If your team needs someone who learns fast and ships complete projects, reach out.", conGh:"See my GitHub",
-  fT:"Send a message", fN:"Name", fE:"Email", fM:"Message", fS:"Send message",
-  cCity:"City", cFmt:"Work format", cFmtV:"On-site, hybrid or remote",
-  foot1:"© 2026 Carlos Serra · Hand-built with HTML, CSS and JavaScript",
-  foot2:"Theme inspired by <i>Bleach: Thousand-Year Blood War</i>. Swords, butterflies and scenery drawn in code. Reference images © Tite Kubo/Shueisha, TV TOKYO, dentsu, Pierrot; non-commercial fan art, not affiliated with the rights holders.",
-  footCmd:"commands", footSearch:"search",
-  palLabel:"Command palette", palPh:"What do you want to do?", palCmds:"Commands", palFoot:"↑ ↓ to choose · Enter to run"
+  s2t:"Design the solution", s2p:"Visual identity, color and type tokens, and the shortest path to an order or a contact.",
+  s3t:"Build with tests", s3p:"Pricing and ordering rules become pure functions with tests (node:test). The visuals never break the rules.",
+  s4t:"Ship and evolve", s4p:"Live on GitHub Pages, measuring performance and accessibility. Then 2.0 and 3.0 versions with what I learned.",
+  stackT:"Stack, with proof", st1:"Front-end", st2:"Back-end", st3:"3D and animation", st4:"AI", st4v:"Google Gemini API (text and voice), with a local fallback when there's no key",
+  st5:"Quality", st5v:"Tests with node:test, accessibility, LGPD (Brazil's GDPR), CSP and security headers", st5l:"10 test files",
+  st6:"Tools", st6v:"Git, GitHub, GitHub Pages, npm, esbuild, Vite and AI coding assistants with review",
+  trajK:"Journey · August to October 2026", trajT:"From my first “hello world” to a system with a database in 47 days.",
+  t1d:"Aug 20", t1t:"First commit", t1p:"“meu-primeiro-site” (my first site), an HTML résumé and a page for my ADS classmates.",
+  t3d:"Sep 3", t3t:"First site for a business", t3p:"Pizzaria do Michelangelo. The Figaro's repository was born the same day.",
+  t4d:"Sep 17", t4t:"College exercises", t4p:"An intro page with video, a page promoting Florianópolis and a full theme page.",
+  t5d:"Oct 1", t5t:"A real store with Tailwind", t5p:"CS Store: 3D showroom, catalog and trade-in calculator.",
+  t6d:"Oct 5–7", t6t:"Smartech 1.0 → 3.0", t6p:"Three versions in three days: 3D with X-ray mode, an NBR 14518 calculator and AI.",
+  t7d:"Oct 6", t7t:"Real full stack", t7p:"Figaro's: Express, SQLite, a dashboard with scrypt passwords and a 3D pizza built in code.",
+  t8d:"Oct 11", t8t:"React 19 + TypeScript + AI", t8p:"São Cristóvão 3.0: an assistant that builds the order, and 10 test files.",
+  t9d:"Oct 16", t9t:"WebGL shader from scratch", t9p:"Ingrid Lima: a realistic eye made only with a shader, no images at all.",
+  aboutK:"About", aboutT:"I learn fast, deliver end to end and ship everything.",
+  aboutP1:"I'm Carlos, 24, studying Systems Analysis and Development (ADS) at FMP in Palhoça, Brazil. I started coding in August 2026 and, in eight weeks, went from plain HTML to systems with a server, database, tests and artificial intelligence.",
+  aboutP2:"I like working close to the business: listening to the pizzeria owner, finding where orders get lost and fixing it with a clear interface and code that doesn't break. I'm looking for a team where I can deliver from week one, get code review and grow in front-end or full stack.",
+  f1:"Based in", f2:"Education", f2v:"Systems Analysis · FMP · 2nd term", f3:"Work format", f3v:"On-site, hybrid or remote", f4:"Languages", f4v:"Native Portuguese · technical English",
+  copyBrief:"Copy recruiter summary", vcard:"Save contact", cv:"Résumé (PDF)",
+  conK:"Contact", conT:"Shall we talk?", conP:"I'm available for an internship or a junior role. WhatsApp is the fastest way to reach me.",
+  fT:"Or send a message here", fN:"Name", fE:"Your email", fM:"Message", fS:"Send message",
+  foot1:"© 2026 Carlos Serra · hand-built with HTML, CSS, JavaScript and three.js", dockLabel:"Quick contact"
 };
 
 /* ----- Textos montados pelo JavaScript ----- */
 var UI = {
   pt:{
-    caseBtn:"Estudo de caso", live:"Ao vivo", code:"Código", liveFull:"Ver ao vivo", codeFull:"Código no GitHub", preview:"Prévia",
-    ctx:"Contexto", did:"O que eu construí", dec:"Decisões técnicas", stack:"Stack", gallery:"Capturas", prev:"Anterior", next:"Próximo",
-    shotAlt:"Captura de tela do site", shotDesk:"Computador · 1280 px", shotMob:"Celular · 390 px", shotScroll:"Mais abaixo na página",
-    all:"Todos", langTitle:"Linguagem principal por repositório", noCode:"Sem código", featured:"DESTAQUE", isNew:"NOVO",
-    empty:q => `Nenhum projeto para “${q}”. Tente react, 3D ou pizza.`, results:n => `${n} ${n === 1 ? "projeto" : "projetos"} na lista`,
-    apiNote:n => `Atualizado agora pela API do GitHub (+${n}).`, newDesc:"Projeto novo no GitHub.",
+    caseBtn:"Estudo de caso", live:"Ao vivo", code:"Código", liveFull:"Ver ao vivo", codeFull:"Código no GitHub",
+    ctx:"Contexto", did:"O que eu construí", dec:"Decisões técnicas", stack:"Stack", prev:"Anterior", next:"Próximo",
+    shotAlt:"Captura de tela do site", shotDesk:"Computador", shotMob:"Celular", delivered:"Entregas",
+    all:"Todos", cats:{ sistema:"Sistemas", negocio:"Sites para negócios", inicio:"Primeiros passos", fmp:"Faculdade" },
+    noLive:"sem versão ao vivo", newRepo:"novo", newDesc:"Projeto novo no GitHub.",
     liveOf:t => `Ver ${t} ao vivo`, codeOf:t => `Código de ${t} no GitHub`,
-    waMsg:"Olá, Carlos! Vi seu portfólio e quero conversar sobre uma oportunidade.", copyPhone:"Copiar telefone", phoneCopied:x => `Telefone copiado: ${x}`,
-    vcardDone:"Contato salvo. Abra o arquivo para adicionar à agenda.", bankaiOn:"卍解 · Bankai ativado", bankaiOff:"Bankai desativado",
-    copyEmail:"Copiar e-mail", copied:x => `Copiado: ${x}`, copyFail:x => `Selecione e copie: ${x}`, briefCopied:"Resumo copiado. É só colar no e-mail ou no ATS.",
-    cvPdf:"Currículo em PDF", email:"E-mail",
-    smUses:(s, list) => list.length ? `${s}: ${list.join(", ")}` : `${s}: nenhum projeto em destaque`, smProj:(p, list) => `${p}: ${list.join(", ")}`,
+    copied:x => `Copiado: ${x}`, copyFail:x => `Selecione e copie: ${x}`, briefCopied:"Resumo copiado. É só colar no e-mail ou no ATS.",
+    vcardDone:"Contato salvo. Abra o arquivo para adicionar à agenda.", bankaiOn:"卍解 · Bankai", bankaiOff:"Bankai desativado",
+    waMsg:"Olá, Carlos! Vi seu portfólio e quero conversar sobre uma oportunidade.",
     errName:"Escreva seu nome.", errEmail:"Escreva um e-mail válido, como nome@empresa.com.", errMsg:"Escreva uma mensagem com pelo menos 10 caracteres.",
-    sending:"Enviando…", sent:"Mensagem enviada. Obrigado! Respondo pelo e-mail que você informou.", sendFail:"Não foi possível enviar agora. Tente de novo ou use o e-mail ao lado.",
+    sending:"Enviando…", sent:"Mensagem enviada. Obrigado!", sendFail:"Não foi possível enviar agora. Tente pelo WhatsApp ou pelo e-mail acima.",
     mailOpened:"Abrimos o seu aplicativo de e-mail com a mensagem pronta.", fixErrors:"Corrija os campos destacados.",
-    langBtn:"EN",
-    pal:{ wa:"Falar no WhatsApp", phone:"Copiar telefone", vcard:"Salvar contato (vCard)", go:"Ir para", open:"Abrir caso", copy:"Copiar e-mail", bankai:"Alternar modo Bankai", lang:"Read in English", gh:"Abrir GitHub", search:"Buscar no arquivo", brief:"Copiar resumo para recrutador", cv:"Abrir currículo", none:"Nenhum comando encontrado", sec:"Seção", act:"Ação", case:"Caso" },
+    mailSubject:n => `Contato pelo portfólio · ${n}`, langBtn:"EN",
     brief:(url, extra) => `Carlos Serra · Desenvolvedor Full Stack Júnior · Palhoça/SC · 24 anos
 Disponível para estágio ou vaga júnior (presencial, híbrido ou remoto).
 Formação: Análise e Desenvolvimento de Sistemas, FMP (Faculdade Municipal de Palhoça), 2ª fase.
 Stack: JavaScript, TypeScript, React 19, Vite, Tailwind 4, Node.js, Express 5, SQLite, three.js, WebGL, GSAP, Google Gemini API, node:test.
-Números: 19 repositórios públicos, 18 sites publicados, 15 arquivos de testes automatizados, 5 negócios reais com site feito por mim.
+Números: 19 repositórios públicos, 5 negócios reais atendidos, 15 arquivos de testes automatizados.
 Destaques: Figaro's Pizzaria 2.0 (Express + SQLite + painel), São Cristóvão 3.0 (React + TypeScript + IA), Smartech 3.0 (3D + calculadora NBR 14518).
 Portfólio: ${url}
 GitHub: https://github.com/carlosserra-a11y${extra}`
   },
   en:{
-    caseBtn:"Case study", live:"Live", code:"Code", liveFull:"See it live", codeFull:"Code on GitHub", preview:"Preview",
-    ctx:"Context", did:"What I built", dec:"Technical decisions", stack:"Stack", gallery:"Screenshots", prev:"Previous", next:"Next",
-    shotAlt:"Screenshot of the site", shotDesk:"Desktop · 1280 px", shotMob:"Mobile · 390 px", shotScroll:"Further down the page",
-    all:"All", langTitle:"Main language per repository", noCode:"No code", featured:"FEATURED", isNew:"NEW",
-    empty:q => `No projects for “${q}”. Try react, 3D or pizza.`, results:n => `${n} ${n === 1 ? "project" : "projects"} listed`,
-    apiNote:n => `Just updated from the GitHub API (+${n}).`, newDesc:"New project on GitHub.",
+    caseBtn:"Case study", live:"Live", code:"Code", liveFull:"See it live", codeFull:"Code on GitHub",
+    ctx:"Context", did:"What I built", dec:"Technical decisions", stack:"Stack", prev:"Previous", next:"Next",
+    shotAlt:"Screenshot of the site", shotDesk:"Desktop", shotMob:"Mobile", delivered:"Delivered",
+    all:"All", cats:{ sistema:"Systems", negocio:"Business sites", inicio:"First steps", fmp:"College" },
+    noLive:"no live version", newRepo:"new", newDesc:"New project on GitHub.",
     liveOf:t => `See ${t} live`, codeOf:t => `${t} source code on GitHub`,
-    waMsg:"Hi Carlos! I saw your portfolio and would like to talk about an opportunity.", copyPhone:"Copy phone number", phoneCopied:x => `Phone copied: ${x}`,
-    vcardDone:"Contact saved. Open the file to add it to your contacts.", bankaiOn:"卍解 · Bankai on", bankaiOff:"Bankai off",
-    copyEmail:"Copy email", copied:x => `Copied: ${x}`, copyFail:x => `Select and copy: ${x}`, briefCopied:"Summary copied. Paste it into an email or your ATS.",
-    cvPdf:"Résumé (PDF)", email:"Email",
-    smUses:(s, list) => list.length ? `${s}: ${list.join(", ")}` : `${s}: no featured project`, smProj:(p, list) => `${p}: ${list.join(", ")}`,
+    copied:x => `Copied: ${x}`, copyFail:x => `Select and copy: ${x}`, briefCopied:"Summary copied. Paste it into an email or your ATS.",
+    vcardDone:"Contact saved. Open the file to add it to your contacts.", bankaiOn:"卍解 · Bankai", bankaiOff:"Bankai off",
+    waMsg:"Hi Carlos! I saw your portfolio and would like to talk about an opportunity.",
     errName:"Please enter your name.", errEmail:"Please enter a valid email, like name@company.com.", errMsg:"Please write a message with at least 10 characters.",
-    sending:"Sending…", sent:"Message sent. Thank you! I'll reply to the email you provided.", sendFail:"Couldn't send right now. Try again or use the email next to it.",
+    sending:"Sending…", sent:"Message sent. Thank you!", sendFail:"Couldn't send right now. Try WhatsApp or the email above.",
     mailOpened:"Your email app was opened with the message ready.", fixErrors:"Please fix the highlighted fields.",
-    langBtn:"PT",
-    pal:{ wa:"Message on WhatsApp", phone:"Copy phone number", vcard:"Save contact (vCard)", go:"Go to", open:"Open case", copy:"Copy email", bankai:"Toggle Bankai mode", lang:"Ler em português", gh:"Open GitHub", search:"Search the archive", brief:"Copy recruiter summary", cv:"Open résumé", none:"No matching command", sec:"Section", act:"Action", case:"Case" },
+    mailSubject:n => `Portfolio contact · ${n}`, langBtn:"PT",
     brief:(url, extra) => `Carlos Serra · Junior Full Stack Developer · Palhoça, Brazil · 24 years old
 Available for an internship or junior role (on-site, hybrid or remote).
 Education: Systems Analysis and Development (ADS), FMP – Faculdade Municipal de Palhoça, 2nd term.
 Stack: JavaScript, TypeScript, React 19, Vite, Tailwind 4, Node.js, Express 5, SQLite, three.js, WebGL, GSAP, Google Gemini API, node:test.
-Numbers: 19 public repositories, 18 published sites, 15 automated test files, 5 real businesses with a site built by me.
+Numbers: 19 public repositories, 5 real businesses served, 15 automated test files.
 Highlights: Figaro's Pizzaria 2.0 (Express + SQLite + dashboard), São Cristóvão 3.0 (React + TypeScript + AI), Smartech 3.0 (3D + NBR 14518 calculator).
 Portfolio: ${url}
 GitHub: https://github.com/carlosserra-a11y${extra}`

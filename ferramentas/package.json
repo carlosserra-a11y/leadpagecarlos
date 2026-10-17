@@ -1,12 +1,14 @@
 {
-  "name": "portfolio-ferramentas",
+  "name": "leadpagecarlos-ferramentas",
   "private": true,
-  "description": "Ferramentas do portfólio: converte as imagens de assets/bleach/originais em AVIF, WebP e JPG.",
+  "description": "Ferramentas do portfólio: monta a katana 3D (three.js + esbuild) e atualiza fontes e hashes da CSP no <head>.",
   "type": "module",
   "scripts": {
-    "imagens": "node imagens.mjs"
+    "katana": "node build-katana.mjs",
+    "cabecalho": "node cabecalho.mjs"
   },
   "dependencies": {
-    "sharp": "0.34.4"
+    "esbuild": "0.24.0",
+    "three": "0.169.0"
   }
 }
