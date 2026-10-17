@@ -4,30 +4,33 @@ Site pessoal de **Carlos Serra**, desenvolvedor full stack júnior em Palhoça/S
 
 **No ar:** https://carlosserra-a11y.github.io/leadpagecarlos/
 
+![Topo do site](assets/og.png)
+
 - E-mail: carlosserraap55@gmail.com
 - WhatsApp: (48) 99617-0281
 - GitHub: https://github.com/carlosserra-a11y
 
 ## O que tem na página
 
-| Seção | Conteúdo |
+| Bloco | Conteúdo |
 | --- | --- |
-| Início | Nome, foto, resumo, contato direto (WhatsApp, e-mail, telefone) e números do GitHub. Atrás da foto, uma zanpakutō em 3D feita com three.js |
-| Trabalhos | 5 estudos de caso com captura de computador e de celular, problema, solução e stack. Cada um abre em detalhe (`#caso-figaros`, `#caso-ingrid`…) |
-| Projetos | Os 9 projetos publicados com filtro por tipo, mais a lista dos outros repositórios (novos repositórios entram sozinhos pela API do GitHub) |
-| Processo | Como eu trabalho, do pedido ao site no ar, e a stack com o projeto que comprova cada item |
-| Trajetória | De agosto a outubro de 2026, do primeiro commit ao sistema com banco de dados |
-| Sobre / Contato | Bio, resumo para recrutador (copiar ou salvar contato .vcf) e formulário |
+| Topo | Nome, cargo, uma frase do que eu faço, provas (clientes reais, sites no ar, stack) e contato. Retrato recortado com uma zanpakutō 3D (three.js) atrás do ombro |
+| Projetos em destaque | Figaro's 2.0, São Cristóvão 3.0 e Smartech 3.0. Cada um com a página inteira rolando dentro da moldura do navegador, o que eu fiz, como conferir e a evolução 1.0 → 3.0 |
+| Outros projetos | Ingrid Lima e CS Store, mais a lista de exercícios e primeiros passos (repositórios novos entram sozinhos pela API do GitHub) |
+| Sobre | Bio, ficha, stack com o projeto que comprova cada item e linha do tempo |
+| Contato | E-mail (com copiar), WhatsApp, GitHub e formulário |
 
-Também tem: versão em inglês (botão EN), modo Bankai (botão no rodapé ou tecla **B**), barra fixa de contato no celular e página 404 própria.
+Também: versão em inglês (botão EN), detalhes de cada projeto com link direto (`#caso-figaros`, `#caso-ingrid`…), modo Bankai (botão no rodapé ou tecla **B**), barra fixa de contato no celular e página 404 própria.
 
-## Tecnologia
+## Decisões técnicas
 
-- HTML, CSS e JavaScript sem framework e sem etapa de build para o site: abre com dois cliques no `index.html`.
-- GSAP + ScrollTrigger para o parallax e as entradas; Lenis para a rolagem suave (só com mouse).
-- three.js para a katana 3D, montada em `lib/katana3d.min.js` a partir de `src/katana3d.js`. Ela carrega depois da página e pausa fora da tela. Em economia de dados ou sem placa de vídeo (WebGL por software) fica um desenho em SVG; com "reduzir movimento" ligado, a versão parada. `?3d=1` na URL força o 3D para testes.
-- Todas as bibliotecas ficam em `lib/` (nenhum script de CDN). Política de segurança (CSP) com hash do único script inline.
-- Imagens em AVIF/WebP com tamanhos responsivos; fontes do Google só com os caracteres usados.
+- **Sem framework e sem build para o site.** HTML, CSS e JavaScript clássicos: abre com dois cliques no `index.html` e publica direto no GitHub Pages.
+- **3D que não atrapalha.** A katana é modelada só com código em `src/katana3d.js` (lâmina com seção real, hamon em shader, ito trançado em 3D) e empacotada com esbuild em `lib/katana3d.min.js`. A página mostra primeiro um pôster gerado pelo próprio modelo; o 3D só entra depois do carregamento, em aparelhos com GPU, e pausa fora da tela. Sem GPU, em economia de dados ou sem JavaScript fica o pôster. `?3d=1` força o 3D para testes.
+- **Movimento com propósito.** GSAP + ScrollTrigger para o topo preso com camadas em velocidades diferentes, os projetos empilhados e a linha do tempo; Lenis só com mouse. Com "reduzir movimento" tudo fica parado e completo.
+- **Segurança.** Nenhum script de CDN (tudo em `lib/`), CSP com o hash do único script inline, links externos com `noopener noreferrer` e links do `CONFIG` validados.
+- **Qualidade verificada a cada push** (`.github/workflows/qualidade.yml`): HTML válido, links sem erro e Lighthouse com orçamento (`.lighthouserc.json`).
+
+Medido localmente com Lighthouse 12: desempenho 96 no celular e 100 no computador; acessibilidade e SEO 100.
 
 ## Estrutura
 
@@ -36,11 +39,12 @@ index.html            página
 404.html              página de erro
 css/style.css         estilos
 js/dados.js           textos, contatos, projetos e traduções (edite aqui)
-js/app.js             comportamento da página
+js/app.js             comportamento da página e animações
 src/katana3d.js       modelo 3D da katana (fonte)
 lib/                  GSAP, ScrollTrigger, Lenis e a katana já montada
-assets/foto/          retrato
-assets/projetos/      capturas dos projetos
+assets/foto/          retrato recortado (AVIF/WebP com transparência)
+assets/katana/        pôster da katana
+assets/projetos/      capturas dos projetos (inclusive a página inteira dos destaques)
 ferramentas/          scripts de manutenção (Node)
 ```
 
@@ -51,9 +55,10 @@ ferramentas/          scripts de manutenção (Node)
    ```
    node ferramentas/cabecalho.mjs
    ```
-3. Depois de mexer na katana (`src/katana3d.js`):
+3. Depois de mexer na katana (`src/katana3d.js`) ou na pose dela (`const POSE` em `js/app.js`):
    ```
-   cd ferramentas && npm install && npm run katana
+   cd ferramentas && npm install && npx playwright install chromium
+   npm run katana && npm run poster
    ```
 
 ## Publicação

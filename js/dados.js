@@ -15,87 +15,98 @@ var CONFIG = {
   curriculo: "",                   // link do PDF do currículo
   formspree: "",                   // código do formspree.io; vazio = o formulário abre o seu e-mail com a mensagem pronta
   buscarRepos: true,               // com o site no ar, busca repositórios novos na API do GitHub
-  katana3d: true,                  // zanpakutō em 3D no topo (cai para o desenho em SVG se o aparelho não tiver WebGL)
+  katana3d: true,                  // zanpakutō em 3D no topo (sem GPU ou sem WebGL fica a imagem estática dela)
   idioma: "pt"
 };
 
-/* ----- Os 5 melhores repositórios (estudos de caso) -----
-   slug = id do link direto (#caso-slug) e nome das capturas em assets/projetos/ */
+/* ----- Projetos com detalhes -----
+   featured = aparece em "Projetos em destaque" (os outros vão para "Outros projetos").
+   slug = id do link direto (#caso-slug); shot = nome das capturas em assets/projetos/
+   (shot-1-640/1280.webp, shot-mob.webp e, nos destaques, shot-longa.webp, a página inteira).
+   proof = como dá para conferir; evo = versões anteriores do mesmo cliente. */
 var CASES = [
-  { slug:"figaros", k:"炎", ink:true, name:"Figaro's Pizzaria 2.0", repo:"Figarus-2.0", shot:"figarus",
+  { slug:"figaros", name:"Figaro's Pizzaria 2.0", repo:"Figarus-2.0", shot:"figarus",
+    featured:true,
+    proof:"API e regras de preço testadas com node:test",
+    evo:[{ v:"1.0", repo:"Figaros-Pizzaria", shot:"figaros1", d:"Cardápio, montador de pizza, checkout por CEP e painel com senha.", de:"Menu, pizza builder, ZIP-code checkout and a password-protected dashboard." },
+         { v:"2.0", repo:"Figarus-2.0", shot:"figarus", d:"Visual novo, pizza 3D em código, histórico de pedidos e testes.", de:"New look, a 3D pizza built in code, order history and tests." }],
     client:"Pizzaria · Palhoça/SC", tag:"Full stack",
     pitch:"Cardápio enorme e pedidos bagunçados no WhatsApp viraram um site com montador de pizza, checkout por CEP, banco de dados e painel do dono.",
     stack:["Node.js","Express 5","SQLite","three.js","Lenis","node:test"],
     ctx:"A Figaro's tem 57 sabores salgados, 14 pizzas doces, calzones, lasanhas, esfihas e combos. Os pedidos chegavam por WhatsApp, sem padrão, e o dono não tinha onde mudar preço ou horário.",
     did:["Montador de pizza: tamanho, até 3 sabores com a pizza desenhada em fatias, borda e observações","Checkout com busca de endereço pelo CEP, taxa por bairro, troco e resumo enviado ao WhatsApp da loja","Servidor Express + SQLite com o histórico de todos os pedidos e de todas as mudanças no cardápio","Painel do desenvolvedor para cadastrar sabores, mudar preços e horários e ver os pedidos chegando com aviso sonoro","Pizza 3D feita em código (three.js): as fatias caem no lugar e se abrem em leque com a rolagem"],
     dec:["Senha guardada com scrypt e código de configuração no primeiro acesso, para ninguém criar a conta antes do dono","Preço de pizza com vários sabores pela média dos sabores, numa regra configurável","Um único laço de animação que dorme quando nada se mexe; sem WebGL ou com “reduzir movimento”, cai sozinho para 2D","Testes da API e das regras de preço com node:test"],
-    en:{ client:"Pizzeria · Palhoça, Brazil", tag:"Full stack",
+    en:{ proof:"API and pricing rules tested with node:test", client:"Pizzeria · Palhoça, Brazil", tag:"Full stack",
       pitch:"A huge menu and messy WhatsApp orders became a site with a pizza builder, ZIP-code checkout, a database and an owner dashboard.",
       ctx:"Figaro's has 57 savory flavors, 14 sweet pizzas, calzones, lasagnas, esfihas and combos. Orders arrived on WhatsApp with no standard, and the owner had nowhere to change prices or opening hours.",
       did:["Pizza builder: size, up to 3 flavors drawn as slices, crust and notes","Checkout with address lookup by ZIP code, delivery fee per neighborhood, change and a summary sent to the store's WhatsApp","Express + SQLite server keeping the history of every order and every menu change","Developer dashboard to add flavors, change prices and hours and watch orders arrive with a sound alert","3D pizza built in code (three.js): slices drop into place and fan out on scroll"],
       dec:["Password stored with scrypt and a setup code on first access, so nobody can create the account before the owner","Multi-flavor pizza price uses the average of the flavors, in a configurable rule","A single animation loop that sleeps when nothing moves; without WebGL or with “reduce motion” it falls back to 2D","API and pricing rules tested with node:test"] } },
 
-  { slug:"sao-cristovao", k:"層", name:"São Cristóvão 3.0", repo:"sao-cristovao-3.0", shot:"saocristovao",
-    bubble:"“Quero 2 Cristóvão Bacon e uma Coca”",
+  { slug:"sao-cristovao", name:"São Cristóvão 3.0", repo:"sao-cristovao-3.0", shot:"saocristovao",
+    featured:true,
+    proof:"10 arquivos de teste no repositório",
+    evo:[{ v:"1.0", repo:"s-o-cristovao", shot:"saocristovao1", d:"Smash burgers, carrinho persistente e estúdio de imagens com Gemini.", de:"Smash burgers, a persistent cart and an image studio with Gemini." },
+         { v:"3.0", repo:"sao-cristovao-3.0", shot:"saocristovao", d:"React 19 + TypeScript, burger na rolagem e atendente que monta o pedido.", de:"React 19 + TypeScript, a scroll-driven burger and an assistant that builds the order." }],
     client:"Hamburgueria · Palhoça/SC", tag:"React + TS",
     pitch:"Cardápio digital com burger que se desmonta na rolagem e um atendente de IA que entende o pedido escrito do jeito que o cliente fala.",
     stack:["React 19","TypeScript","Vite 8","Tailwind 4","Express","Gemini"],
     ctx:"A loja vende pelo iFood, mas o cliente se perdia entre o cardápio e o app sem saber o que pedir para quantas pessoas.",
     did:["Hero com o burger em tela cheia controlado pela rolagem (sequência de quadros em canvas, funciona no iPhone)","Cardápio em abas, filtro “para quantas pessoas” nos combos e busca com contagem por aba","Atendente que entende frases como “combo para casal”, monta o carrinho e leva ao checkout","Carrinho persistente que vira um resumo copiável para pedir no iFood"],
     dec:["O iFood não aceita carrinho vindo de outro site, então o carrinho vira resumo copiável","O site não coleta nome, telefone, endereço nem pagamento: menos risco e menos LGPD","Link do iFood validado (só https e domínios do iFood); configuração da loja num arquivo só","Com GEMINI_API_KEY quem responde é o Gemini; sem servidor, um atendente local responde sozinho","10 arquivos de testes: pedidos, horários, consentimento e headers de segurança"],
-    en:{ client:"Burger joint · Palhoça, Brazil", tag:"React + TS", bubble:"“I want 2 Cristóvão Bacon and a Coke”",
+    en:{ proof:"10 test files in the repository", client:"Burger joint · Palhoça, Brazil", tag:"React + TS",
       pitch:"Digital menu with a burger that comes apart on scroll and an AI assistant that understands orders written the way customers talk.",
       ctx:"The store sells through iFood, but customers got lost between the menu and the app, unsure what to order for how many people.",
       did:["Full-screen burger hero driven by scroll (canvas frame sequence, works on iPhone)","Tabbed menu, “for how many people” filter on combos and search with per-tab counts","Assistant that understands phrases like “combo for a couple”, fills the cart and goes to checkout","Persistent cart that becomes a copyable summary to order on iFood"],
       dec:["iFood doesn't accept carts from other sites, so the cart becomes a copyable summary","The site collects no name, phone, address or payment: less risk and less LGPD (Brazil's GDPR) exposure","iFood link validated (https and iFood domains only); store settings in a single file","With GEMINI_API_KEY Gemini answers; without a server, a local assistant answers on its own","10 test files: orders, opening hours, consent and security headers"] } },
 
-  { slug:"smartech", k:"光", red:true, name:"Smartech 3.0", repo:"smartech-3.0", shot:"smartech",
+  { slug:"smartech", name:"Smartech 3.0", repo:"smartech-3.0", shot:"smartech",
+    featured:true,
+    proof:"Regras da calculadora em funções puras, com testes",
+    evo:[{ v:"1.0", repo:"smartech", shot:"smartech1", d:"Site institucional com Tailwind explicando a tecnologia UV-C.", de:"Company site in Tailwind explaining the UV-C technology." },
+         { v:"2.0", repo:"smartech-2.0", shot:"smartech2", d:"Sem build, temas claro e escuro, calculadora testável e SRI.", de:"No build step, light and dark themes, a testable calculator and SRI." },
+         { v:"3.0", repo:"smartech-3.0", shot:"smartech", d:"Showroom 3D com Raio-X, calculadora NBR 14518 e consultor com IA.", de:"3D showroom with X-ray mode, NBR 14518 calculator and an AI consultant." }],
     client:"Coifas industriais UV-C · Florianópolis", tag:"3D + IA",
     pitch:"Um produto técnico difícil de explicar virou um showroom 3D com Raio-X, calculadora pela norma e um consultor com IA.",
     stack:["three.js","GSAP","Gemini API","JavaScript","node:test"],
     ctx:"A Smartech fabrica coifas em inox com lâmpadas UV-C. Foto não mostra o que tem dentro, e o cliente precisa calcular vazão e exaustor antes de pedir orçamento.",
     did:["Showroom 3D com modo Raio-X, vistas em corte, hotspots clicáveis e ficha técnica de cada peça","Calculadora em tempo real pela NBR 14518: vazão, diâmetro do duto, potência do exaustor e lâmpadas UV-C","Guia em áudio sobre a física da ozonólise (Gemini TTS ou voz do navegador)","Consultor técnico com Gemini e busca do Google; sem o servidor, responde por uma base local"],
     dec:["Materiais já nascem transparentes com opacidade 1, assim a troca para Raio-X não recompila shader","Ordem de renderização fixa entre carcaça e peças internas para o Raio-X não piscar","Bibliotecas de CDN com versão fixa e verificação SRI; um único arquivo de configuração","Regras da calculadora em funções puras, com testes"],
-    en:{ client:"UV-C industrial hoods · Florianópolis", tag:"3D + AI",
+    en:{ proof:"Calculator rules as pure functions, with tests", client:"UV-C industrial hoods · Florianópolis", tag:"3D + AI",
       pitch:"A technical product that was hard to explain became a 3D showroom with X-ray mode, a standards-based calculator and an AI consultant.",
       ctx:"Smartech builds stainless-steel kitchen hoods with UV-C lamps. Photos don't show what's inside, and customers must size airflow and exhaust fans before asking for a quote.",
       did:["3D showroom with X-ray mode, cutaway views, clickable hotspots and a spec sheet for each part","Real-time calculator following NBR 14518: airflow, duct diameter, fan power and UV-C lamps","Audio guide on the physics of ozonolysis (Gemini TTS or the browser's voice)","Technical consultant with Gemini and Google Search; without the server it answers from a local knowledge base"],
       dec:["Materials start transparent with opacity 1, so switching to X-ray doesn't recompile shaders","Fixed render order between the housing and inner parts so the X-ray doesn't flicker","CDN libraries pinned to exact versions with SRI checks; a single config file","Calculator rules as pure functions, with tests"] } },
 
-  { slug:"ingrid", k:"眼", ink:true, name:"Ingrid Lima", repo:"ingrid-market", shot:"ingrid",
+  { slug:"ingrid", name:"Ingrid Lima", repo:"ingrid-market", shot:"ingrid",
+    featured:false, proof:"Testado em 375, 961 e 1440 px, sem erros no console",
     client:"Vídeomaker mobile e social media", tag:"WebGL",
     pitch:"Landing page cujo herói é um olho realista feito só com shader: segue o mouse, pisca e guia a rolagem até o WhatsApp.",
     stack:["WebGL","GLSL","GSAP 3.13","JavaScript","Sem build"],
     ctx:"Uma profissional de vídeo precisava de um site que chamasse atenção logo de cara e transformasse visita em contato no WhatsApp.",
     did:["Olho realista desenhado inteiramente em WebGL: íris com fibras, pele com relevo e delineado, sem nenhuma imagem","Segue o mouse e o dedo, pisca sozinho, reage ao clique e cochila quando ninguém mexe","Mergulho guiado pela rolagem com visor de câmera (REC, cronômetro e foco) dentro da pupila","Portfólio com 9 vídeos verticais e player em tela cheia"],
     dec:["Vídeos só carregam quando aparecem, no máximo 2 tocam juntos e respeitam a economia de dados","O WebGL limita a densidade de pixels, reduz a resolução se o aparelho não acompanhar e pausa fora da tela","Sem WebGL entra um olho feito em CSS, no mesmo estilo","Testado em 375, 961 e 1440 px, sem rolagem horizontal e sem erros no console"],
-    en:{ client:"Mobile videomaker and social media", tag:"WebGL",
+    en:{ proof:"Tested at 375, 961 and 1440 px, no console errors", client:"Mobile videomaker and social media", tag:"WebGL",
       pitch:"A landing page whose hero is a realistic eye made only with a shader: it follows the mouse, blinks and guides the scroll to WhatsApp.",
       ctx:"A video professional needed a site that grabbed attention right away and turned visits into WhatsApp contacts.",
       did:["Realistic eye drawn entirely in WebGL: fibrous iris, textured skin and eyeliner, no images at all","Follows mouse and finger, blinks on its own, reacts to clicks and dozes off when idle","Scroll-driven dive with a camera viewfinder (REC, timer and focus) inside the pupil","Portfolio with 9 vertical videos and a full-screen player"],
       dec:["Videos load only when visible, at most 2 play at once and data-saver is respected","WebGL caps pixel density, lowers resolution if the device can't keep up and pauses off-screen","Without WebGL a CSS eye takes over, in the same style","Tested at 375, 961 and 1440 px, with no horizontal scroll and no console errors"] } },
 
-  { slug:"cs-store", k:"店", name:"CS Store", repo:"csiphone", shot:"csstore",
+  { slug:"cs-store", name:"CS Store", repo:"csiphone", shot:"csstore",
+    featured:false, proof:"Site de um arquivo só, publicado no GitHub Pages",
     client:"Loja de iPhones · Palhoça/SC", tag:"Tailwind",
     pitch:"Loja de iPhones novos e seminovos com showroom 3D, catálogo, calculadora de troca e atendimento direto no WhatsApp.",
     stack:["HTML","Tailwind CSS","JavaScript","three.js"],
     ctx:"A loja precisava de um site que passasse confiança para vender aparelhos caros, mostrar o catálogo e simular a troca do celular antigo.",
     did:["Showroom 3D interativo e catálogo de iPhones","Calculadora CS Trade-In para simular a troca","Seções de loja física, avaliações e FAQ","Menu mobile e animações que entram ao rolar"],
     dec:["Paleta própria em Tailwind (grafite, titânio e dourado) configurada no tema","Animações por IntersectionObserver, leves e sem biblioteca","Site de um arquivo só, publicado no GitHub Pages"],
-    en:{ client:"iPhone store · Palhoça, Brazil", tag:"Tailwind",
+    en:{ proof:"Single-file site published on GitHub Pages", client:"iPhone store · Palhoça, Brazil", tag:"Tailwind",
       pitch:"New and pre-owned iPhone store with a 3D showroom, catalog, trade-in calculator and direct WhatsApp support.",
       ctx:"The store needed a site that built trust to sell expensive devices, showed the catalog and simulated trading in an old phone.",
       did:["Interactive 3D showroom and iPhone catalog","CS Trade-In calculator to simulate a trade","Sections for the physical store, reviews and FAQ","Mobile menu and scroll-in animations"],
       dec:["Custom Tailwind palette (graphite, titanium and gold) set in the theme","Animations via IntersectionObserver, lightweight and library-free","Single-file site published on GitHub Pages"] } }
 ];
 
-/* ----- Arquivo completo (dados reais dos repositórios) -----
-   c = categoria: sistema, negocio, fmp ou inicio · de = descrição em inglês */
-var CATS = {
-  pt:{ sistema:"Sistemas completos", negocio:"Sites para negócios", fmp:"Faculdade", inicio:"Primeiros passos" },
-  en:{ sistema:"Full systems", negocio:"Business sites", fmp:"College", inicio:"First steps" }
-};
-var LANG_COLOR = { JavaScript:"#f1e05a", TypeScript:"#3178c6", HTML:"#e34c26", "": "#5b6280" };
+/* ----- Todos os repositórios públicos (a lista "Exercícios e primeiros passos" mostra os que não aparecem acima) ----- */
 var REPOS = [
   { n:"ingrid-market", t:"Ingrid Lima · Vídeomaker", d:"Landing page com olho realista em WebGL que guia a rolagem e portfólio em vídeo vertical.", de:"Landing page with a realistic WebGL eye that guides the scroll and a vertical video portfolio.", l:"JavaScript", c:"negocio", at:"2026-10-16", pages:true, tags:"webgl shader gsap landing" },
   { n:"Figarus-2.0", t:"Figaro's Pizzaria 2.0", d:"Visual “Futurismo Quente”: tema escuro, vidro, brilho de brasa e animações ao rolar. Pedidos, banco de dados e painel.", de:"“Warm Futurism” look: dark theme, glass, ember glow and scroll animations. Orders, database and dashboard.", l:"JavaScript", c:"sistema", at:"2026-10-14", pages:true, tags:"node express sqlite three 3d pizza" },
@@ -118,94 +129,68 @@ var REPOS = [
   { n:"Curriculum-programador", t:"Curriculum-programador", d:"Repositório criado para o currículo; ainda vazio.", de:"Repository created for the résumé; still empty.", l:"", c:"inicio", at:"2026-08-20", pages:false, tags:"curriculo resume" }
 ];
 
-
-/* ----- Grade "Todos os projetos": os que têm captura de tela em assets/projetos/ ----- */
-var PROJECTS = [
-  { repo:"Figarus-2.0", shot:"figarus", c:"sistema", t:"Figaro's Pizzaria 2.0", d:"Pedidos com montador de pizza, checkout por CEP, Express + SQLite e painel do dono.", de:"Ordering with a pizza builder, ZIP-code checkout, Express + SQLite and an owner dashboard.", tags:["Node.js","SQLite","three.js"] },
-  { repo:"sao-cristovao-3.0", shot:"saocristovao", c:"sistema", t:"São Cristóvão 3.0", d:"Cardápio em React + TypeScript com burger guiado pela rolagem e atendente de IA.", de:"React + TypeScript menu with a scroll-driven burger and an AI ordering assistant.", tags:["React 19","TypeScript","Gemini"] },
-  { repo:"smartech-3.0", shot:"smartech", c:"negocio", t:"Smartech 3.0", d:"Showroom 3D com Raio-X, calculadora pela NBR 14518 e consultor técnico com IA.", de:"3D showroom with X-ray mode, NBR 14518 calculator and an AI technical consultant.", tags:["three.js","GSAP","Gemini"] },
-  { repo:"ingrid-market", shot:"ingrid", c:"negocio", t:"Ingrid Lima", d:"Olho realista feito só com shader WebGL guiando a rolagem até o WhatsApp.", de:"A realistic eye drawn only with a WebGL shader, guiding the scroll to WhatsApp.", tags:["WebGL","GLSL","GSAP"] },
-  { repo:"csiphone", shot:"csstore", c:"negocio", t:"CS Store", d:"Loja de iPhones com showroom 3D, catálogo e calculadora de troca.", de:"iPhone store with a 3D showroom, catalog and trade-in calculator.", tags:["Tailwind","three.js"] },
-  { repo:"Figaros-Pizzaria", shot:"figaros1", c:"sistema", t:"Figaro's Pizzaria 1.0", d:"Primeira versão: cardápio completo, montador de pizza, SQLite e painel com senha.", de:"First version: full menu, pizza builder, SQLite and a password-protected dashboard.", tags:["Node.js","Express","SQLite"] },
-  { repo:"s-o-cristovao", shot:"saocristovao1", c:"sistema", t:"São Cristóvão Burger", d:"Primeira versão: carrinho persistente, assistente gastronômico e estúdio de imagens com Gemini.", de:"First version: persistent cart, food assistant and an image studio with Gemini.", tags:["React","TypeScript","Gemini"] },
-  { repo:"smartech-2.0", shot:"smartech2", c:"negocio", t:"Smartech 2.0", d:"Site sem build com tema claro e escuro, calculadora testável e GSAP verificado por SRI.", de:"No-build site with light and dark themes, a testable calculator and SRI-verified GSAP.", tags:["GSAP","node:test"] },
-  { repo:"smartech", shot:"smartech1", c:"negocio", t:"Smartech 1.0", d:"Primeira versão do site de coifas industriais com tecnologia UV-C.", de:"First version of the UV-C industrial hood website.", tags:["Tailwind","three.js"] }
-];
-
 /* ----- Textos em inglês (o português está no próprio HTML) ----- */
 var EN = {
   docTitle:"Carlos Serra · Junior Full Stack Developer",
-  docDesc:"Carlos Serra, junior full stack developer in Palhoça, Brazil. Websites and systems for real businesses with React, TypeScript, Node.js, SQLite, three.js and AI. Open to internships and junior roles.",
+  docDesc:"Carlos Serra, junior full stack developer in Palhoça, Brazil. Websites and systems for real businesses with React, TypeScript, Node.js, SQLite and three.js. Open to internships and junior roles.",
   skip:"Skip to content", navLabel:"Sections", langLabel:"PT · Ler em português", ghLabel:"GitHub (opens in a new tab)", topWa:"Let's talk",
-  nav1:"Work", nav2:"Projects", nav3:"Process", nav4:"About", nav5:"Contact",
-  kicker:"Open to internships and junior roles · Palhoça, Brazil · hybrid or remote",
-  role:"Full stack developer.",
-  lede:"I build websites and systems for real businesses: menus that take WhatsApp orders, dashboards backed by a database, 3D showcases and AI-assisted service. Tested, shipped and maintained by me.",
-  ctaWa:"Message on WhatsApp", ctaWork:"See my work", copyEmail:"Copy email",
-  p1:"public repositories", p2:"real businesses served", p3:"automated test files", cap:"24 · Systems Analysis · FMP", scrollLabel:"Scroll to my work",
-  cliT:"Websites and systems delivered for",
-  workK:"Selected work", workT:"Real business problems, solved with code.", workP:"Five projects that show what I do end to end: understand the problem, design, build with tests and ship.",
-  caseClose:"Close case study",
-  allK:"All projects", allT:"Everything that's live, from my first site to the latest.", filterLabel:"Filter projects", moreT:"Exercises and first steps",
-  procK:"How I work", procT:"From the client's request to a live site.",
-  s1t:"Understand the business", s1p:"Before opening the editor: what the client sells, how orders arrive and what goes wrong today.",
-  s2t:"Design the solution", s2p:"Visual identity, color and type tokens, and the shortest path to an order or a contact.",
-  s3t:"Build with tests", s3p:"Pricing and ordering rules become pure functions with tests (node:test). The visuals never break the rules.",
-  s4t:"Ship and evolve", s4p:"Live on GitHub Pages, measuring performance and accessibility. Then 2.0 and 3.0 versions with what I learned.",
-  stackT:"Stack, with proof", st1:"Front-end", st2:"Back-end", st3:"3D and animation", st4:"AI", st4v:"Google Gemini API (text and voice), with a local fallback when there's no key",
-  st5:"Quality", st5v:"Tests with node:test, accessibility, LGPD (Brazil's GDPR), CSP and security headers", st5l:"10 test files",
-  st6:"Tools", st6v:"Git, GitHub, GitHub Pages, npm, esbuild, Vite and AI coding assistants with review",
-  trajK:"Journey · August to October 2026", trajT:"From my first “hello world” to a system with a database in 47 days.",
-  t1d:"Aug 20", t1t:"First commit", t1p:"“meu-primeiro-site” (my first site), an HTML résumé and a page for my ADS classmates.",
-  t3d:"Sep 3", t3t:"First site for a business", t3p:"Pizzaria do Michelangelo. The Figaro's repository was born the same day.",
-  t4d:"Sep 17", t4t:"College exercises", t4p:"An intro page with video, a page promoting Florianópolis and a full theme page.",
-  t5d:"Oct 1", t5t:"A real store with Tailwind", t5p:"CS Store: 3D showroom, catalog and trade-in calculator.",
-  t6d:"Oct 5–7", t6t:"Smartech 1.0 → 3.0", t6p:"Three versions in three days: 3D with X-ray mode, an NBR 14518 calculator and AI.",
-  t7d:"Oct 6", t7t:"Real full stack", t7p:"Figaro's: Express, SQLite, a dashboard with scrypt passwords and a 3D pizza built in code.",
-  t8d:"Oct 11", t8t:"React 19 + TypeScript + AI", t8p:"São Cristóvão 3.0: an assistant that builds the order, and 10 test files.",
-  t9d:"Oct 16", t9t:"WebGL shader from scratch", t9p:"Ingrid Lima: a realistic eye made only with a shader, no images at all.",
-  aboutK:"About", aboutT:"I learn fast, deliver end to end and ship everything.",
-  aboutP1:"I'm Carlos, 24, studying Systems Analysis and Development (ADS) at FMP in Palhoça, Brazil. I started coding in August 2026 and, in eight weeks, went from plain HTML to systems with a server, database, tests and artificial intelligence.",
-  aboutP2:"I like working close to the business: listening to the pizzeria owner, finding where orders get lost and fixing it with a clear interface and code that doesn't break. I'm looking for a team where I can deliver from week one, get code review and grow in front-end or full stack.",
-  f1:"Based in", f2:"Education", f2v:"Systems Analysis · FMP · 2nd term", f3:"Work format", f3v:"On-site, hybrid or remote", f4:"Languages", f4v:"Native Portuguese · technical English",
+  nav1:"Projects", nav2:"About", nav3:"Contact",
+  kicker:"Palhoça, Brazil · open to internships and junior roles",
+  role:"Junior full stack developer",
+  lede:"I build websites and systems for real businesses: WhatsApp ordering, dashboards backed by a database and 3D showcases. I study Systems Analysis at FMP.",
+  ctaWork:"See projects", copyEmail:"Copy email",
+  p1:"<b>5</b> real clients", p2:"<b>9</b> sites live",
+  workK:"Featured projects", workT:"Projects that are live and in use",
+  caseClose:"Close project details",
+  moreK:"Other projects", moreH:"Two more clients, different challenges", moreT:"Exercises and first steps",
+  aboutK:"About", aboutT:"About me",
+  aboutP1:"I study Systems Analysis and Development at FMP in Palhoça, Brazil. I started coding in August 2026 and since then I've built websites and systems that 5 local businesses use: menus that take WhatsApp orders, a dashboard with login and a database, a 3D showcase.",
+  aboutP2:"I like to understand how the business works before opening the editor. I want to join a team where I get code review and grow in front-end or full stack.",
+  f1:"Based in", f2:"Education", f2v:"Systems Analysis, FMP (2nd term)", f3:"Work format", f3v:"On-site, hybrid or remote", f4:"Languages", f4v:"Portuguese, technical English",
+  st3:"3D and animation", st4:"AI and testing", st4v:"Gemini API, node:test, accessibility, CSP",
   copyBrief:"Copy recruiter summary", vcard:"Save contact", cv:"Résumé (PDF)",
-  conK:"Contact", conT:"Shall we talk?", conP:"I'm available for an internship or a junior role. WhatsApp is the fastest way to reach me.",
-  fT:"Or send a message here", fN:"Name", fE:"Your email", fM:"Message", fS:"Send message",
-  foot1:"© 2026 Carlos Serra · hand-built with HTML, CSS, JavaScript and three.js", dockLabel:"Quick contact"
+  tlT:"Timeline · 2026",
+  t1d:"Aug 20", t1t:"First commit", t1p:"An HTML résumé and a page for my ADS classmates.",
+  t2d:"Oct 1", t2t:"First real store", t2p:"CS Store: iPhone catalog, 3D showroom and trade-in calculator.",
+  t3d:"Oct 5–7", t3p:"Three versions in three days, up to the 3D showroom with X-ray mode.",
+  t4d:"Oct 6", t4t:"First system with a database", t4p:"Figaro's 2.0: Express, SQLite and an owner dashboard with login.",
+  t5d:"Oct 11", t5t:"React + TypeScript + AI", t5p:"São Cristóvão 3.0: an assistant that builds the order, and 10 test files.",
+  conK:"Contact", conT:"Let's talk", conP:"I'm available for an internship or a junior role. WhatsApp is the fastest way to reach me.",
+  fT:"Or leave a message", fN:"Name", fE:"Your email", fM:"Message", fS:"Send message",
+  foot1:"Carlos Serra · junior full stack developer", foot2:"© 2026 · hand-built with HTML, CSS, JavaScript and three.js", footCode:"Source of this site",
+  dockLabel:"Quick contact", openSite:"Open site"
 };
 
 /* ----- Textos montados pelo JavaScript ----- */
 var UI = {
   pt:{
-    caseBtn:"Estudo de caso", live:"Ao vivo", code:"Código", liveFull:"Ver ao vivo", codeFull:"Código no GitHub",
-    ctx:"Contexto", did:"O que eu construí", dec:"Decisões técnicas", stack:"Stack", prev:"Anterior", next:"Próximo",
-    shotAlt:"Captura de tela do site", shotDesk:"Computador", shotMob:"Celular", delivered:"Entregas",
-    all:"Todos", cats:{ sistema:"Sistemas", negocio:"Sites para negócios", inicio:"Primeiros passos", fmp:"Faculdade" },
-    noLive:"sem versão ao vivo", newRepo:"novo", newDesc:"Projeto novo no GitHub.",
-    liveOf:t => `Ver ${t} ao vivo`, codeOf:t => `Código de ${t} no GitHub`,
+    details:"Detalhes do projeto", live:"Site no ar", code:"Código", liveFull:"Ver ao vivo", codeFull:"Código no GitHub",
+    ctx:"Contexto", did:"O que eu fiz", dec:"Decisões técnicas", stack:"Stack", check:"Como conferir", evo:"Evolução", prev:"Anterior", next:"Próximo",
+    shotAlt:"Captura de tela do site", shotDesk:"Computador", shotMob:"Celular", now:"atual",
+    newRepo:"novo", newDesc:"Projeto novo no GitHub.",
+    liveOf:t => `Ver ${t} no ar`, codeOf:t => `Código de ${t} no GitHub`, versionOf:(t, v) => `${t} ${v} no ar`,
     copied:x => `Copiado: ${x}`, copyFail:x => `Selecione e copie: ${x}`, briefCopied:"Resumo copiado. É só colar no e-mail ou no ATS.",
-    vcardDone:"Contato salvo. Abra o arquivo para adicionar à agenda.", bankaiOn:"卍解 · Bankai", bankaiOff:"Bankai desativado",
+    vcardDone:"Contato salvo. Abra o arquivo para adicionar à agenda.", bankaiOn:"卍解 · Bankai", bankaiOff:"Bankai desligado",
     waMsg:"Olá, Carlos! Vi seu portfólio e quero conversar sobre uma oportunidade.",
     errName:"Escreva seu nome.", errEmail:"Escreva um e-mail válido, como nome@empresa.com.", errMsg:"Escreva uma mensagem com pelo menos 10 caracteres.",
     sending:"Enviando…", sent:"Mensagem enviada. Obrigado!", sendFail:"Não foi possível enviar agora. Tente pelo WhatsApp ou pelo e-mail acima.",
-    mailOpened:"Abrimos o seu aplicativo de e-mail com a mensagem pronta.", fixErrors:"Corrija os campos destacados.",
+    mailOpened:"Abri o seu aplicativo de e-mail com a mensagem pronta.", fixErrors:"Corrija os campos destacados.",
     mailSubject:n => `Contato pelo portfólio · ${n}`, langBtn:"EN",
-    brief:(url, extra) => `Carlos Serra · Desenvolvedor Full Stack Júnior · Palhoça/SC · 24 anos
+    brief:(url, extra) => `Carlos Serra · Desenvolvedor Full Stack Júnior · Palhoça/SC
 Disponível para estágio ou vaga júnior (presencial, híbrido ou remoto).
 Formação: Análise e Desenvolvimento de Sistemas, FMP (Faculdade Municipal de Palhoça), 2ª fase.
-Stack: JavaScript, TypeScript, React 19, Vite, Tailwind 4, Node.js, Express 5, SQLite, three.js, WebGL, GSAP, Google Gemini API, node:test.
-Números: 19 repositórios públicos, 5 negócios reais atendidos, 15 arquivos de testes automatizados.
+Stack: JavaScript, TypeScript, React 19, Vite, Tailwind, Node.js, Express 5, SQLite, three.js, WebGL, GSAP, Gemini API, node:test.
+Números: 5 clientes reais, 9 sites no ar, 19 repositórios públicos.
 Destaques: Figaro's Pizzaria 2.0 (Express + SQLite + painel), São Cristóvão 3.0 (React + TypeScript + IA), Smartech 3.0 (3D + calculadora NBR 14518).
 Portfólio: ${url}
 GitHub: https://github.com/carlosserra-a11y${extra}`
   },
   en:{
-    caseBtn:"Case study", live:"Live", code:"Code", liveFull:"See it live", codeFull:"Code on GitHub",
-    ctx:"Context", did:"What I built", dec:"Technical decisions", stack:"Stack", prev:"Previous", next:"Next",
-    shotAlt:"Screenshot of the site", shotDesk:"Desktop", shotMob:"Mobile", delivered:"Delivered",
-    all:"All", cats:{ sistema:"Systems", negocio:"Business sites", inicio:"First steps", fmp:"College" },
-    noLive:"no live version", newRepo:"new", newDesc:"New project on GitHub.",
-    liveOf:t => `See ${t} live`, codeOf:t => `${t} source code on GitHub`,
+    details:"Project details", live:"Live site", code:"Code", liveFull:"See it live", codeFull:"Code on GitHub",
+    ctx:"Context", did:"What I built", dec:"Technical decisions", stack:"Stack", check:"How to verify", evo:"Evolution", prev:"Previous", next:"Next",
+    shotAlt:"Screenshot of the site", shotDesk:"Desktop", shotMob:"Mobile", now:"current",
+    newRepo:"new", newDesc:"New project on GitHub.",
+    liveOf:t => `See ${t} live`, codeOf:t => `${t} source code on GitHub`, versionOf:(t, v) => `${t} ${v} live`,
     copied:x => `Copied: ${x}`, copyFail:x => `Select and copy: ${x}`, briefCopied:"Summary copied. Paste it into an email or your ATS.",
     vcardDone:"Contact saved. Open the file to add it to your contacts.", bankaiOn:"卍解 · Bankai", bankaiOff:"Bankai off",
     waMsg:"Hi Carlos! I saw your portfolio and would like to talk about an opportunity.",
@@ -213,11 +198,11 @@ GitHub: https://github.com/carlosserra-a11y${extra}`
     sending:"Sending…", sent:"Message sent. Thank you!", sendFail:"Couldn't send right now. Try WhatsApp or the email above.",
     mailOpened:"Your email app was opened with the message ready.", fixErrors:"Please fix the highlighted fields.",
     mailSubject:n => `Portfolio contact · ${n}`, langBtn:"PT",
-    brief:(url, extra) => `Carlos Serra · Junior Full Stack Developer · Palhoça, Brazil · 24 years old
+    brief:(url, extra) => `Carlos Serra · Junior Full Stack Developer · Palhoça, Brazil
 Available for an internship or junior role (on-site, hybrid or remote).
 Education: Systems Analysis and Development (ADS), FMP – Faculdade Municipal de Palhoça, 2nd term.
-Stack: JavaScript, TypeScript, React 19, Vite, Tailwind 4, Node.js, Express 5, SQLite, three.js, WebGL, GSAP, Google Gemini API, node:test.
-Numbers: 19 public repositories, 5 real businesses served, 15 automated test files.
+Stack: JavaScript, TypeScript, React 19, Vite, Tailwind, Node.js, Express 5, SQLite, three.js, WebGL, GSAP, Gemini API, node:test.
+Numbers: 5 real clients, 9 live sites, 19 public repositories.
 Highlights: Figaro's Pizzaria 2.0 (Express + SQLite + dashboard), São Cristóvão 3.0 (React + TypeScript + AI), Smartech 3.0 (3D + NBR 14518 calculator).
 Portfolio: ${url}
 GitHub: https://github.com/carlosserra-a11y${extra}`

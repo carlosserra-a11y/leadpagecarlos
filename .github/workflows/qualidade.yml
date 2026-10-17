@@ -1,0 +1,49 @@
+# Verificação de qualidade a cada push na main e em pull requests:
+# HTML válido, nenhum link quebrado e Lighthouse dentro do orçamento (.lighthouserc.json).
+name: Qualidade
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  html:
+    name: HTML válido
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npx -y html-validate@9.4.1 index.html 404.html
+
+  links:
+    name: Links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress --max-retries 3 --accept 200,206,429
+            --exclude "wa\.me" --exclude "fonts\.(googleapis|gstatic)\.com" --exclude "linkedin\.com"
+            --exclude-path ferramentas/node_modules
+            index.html 404.html README.md
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  lighthouse:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./.lighthouserc.json
+          uploadArtifacts: true

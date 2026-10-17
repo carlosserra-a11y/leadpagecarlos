@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Pôster da katana</title>
+<meta name="robots" content="noindex">
+<style>html,body{margin:0;background:transparent}canvas{display:block;width:100vw;height:100vh}</style>
+</head>
+<body>
+<!-- Usado por ferramentas/poster.mjs: desenha a katana parada, com fundo transparente, para virar imagem -->
+<canvas id="k"></canvas>
+<script src="../lib/katana3d.min.js"></script>
+<script>
+  var q = new URLSearchParams(location.search);
+  var k = Katana3D.mountKatana(document.getElementById("k"), { still: true, poster: true, pose: JSON.parse(q.get("pose") || "{}") });
+  if (q.get("bankai")) k.bankai(true);
+  document.title = "pronto";
+</script>
+</body>
+</html>
